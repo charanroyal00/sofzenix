@@ -88,11 +88,11 @@ const InteractiveBackground = () => {
       { x: width * 0.85, y: height * 0.65, radius: 5 }
     ];
 
-    // Ambient Orbs (Standard Pastel setup)
+    // Ambient Orbs (Exact Pale Glassy Ice Blue setup)
     const orbs = [
-      { x: width * 0.15, y: height * 0.25, baseRadius: 360, color: 'rgba(37, 99, 235, 0.04)', angle: 0, speed: 0.00018 },
-      { x: width * 0.82, y: height * 0.2, baseRadius: 380, color: 'rgba(245, 158, 11, 0.03)', angle: Math.PI / 4, speed: 0.00013 },
-      { x: width * 0.22, y: height * 0.82, baseRadius: 320, color: 'rgba(226, 92, 255, 0.03)', angle: Math.PI * 0.75, speed: 0.00022 }
+      { x: width * 0.15, y: height * 0.25, baseRadius: 420, color: 'rgba(56, 189, 248, 0.08)', angle: 0, speed: 0.00018 },
+      { x: width * 0.82, y: height * 0.2, baseRadius: 450, color: 'rgba(37, 99, 235, 0.06)', angle: Math.PI / 4, speed: 0.00013 },
+      { x: width * 0.22, y: height * 0.82, baseRadius: 380, color: 'rgba(14, 165, 233, 0.05)', angle: Math.PI * 0.75, speed: 0.00022 }
     ];
 
     let time = 0;
@@ -103,11 +103,11 @@ const InteractiveBackground = () => {
       const scrollY = window.scrollY;
       const parallaxFactor = 0.12;
       
-      // Base Solid Fill (#F8FAFC)
-      ctx.fillStyle = '#F8FAFC';
+      // Base Solid Fill (Exact Pale Glassy Ice Blue #F0F8FF)
+      ctx.fillStyle = '#F0F8FF';
       ctx.fillRect(0, 0, width, height);
 
-      // Slow Aurora Mesh Gradient
+      // Slow Aurora Mesh Gradient (Exact Glassy Ice Palette)
       const meshX = width / 2 + Math.sin(time * 0.025) * (width * 0.12);
       const meshY = height / 2 + Math.cos(time * 0.02) * (height * 0.12) - scrollY * parallaxFactor;
       
@@ -119,9 +119,10 @@ const InteractiveBackground = () => {
         height / 2 - scrollY * parallaxFactor, 
         width * 0.85
       );
-      meshGrad.addColorStop(0, '#EEF4FF');
-      meshGrad.addColorStop(0.5, '#EAF4FF');
-      meshGrad.addColorStop(1, '#F8FAFC');
+      meshGrad.addColorStop(0, '#E6F4FA'); // Glassy Azure Ice
+      meshGrad.addColorStop(0.35, '#ECF7FC'); // Pale Glassy Azure
+      meshGrad.addColorStop(0.7, '#F0F8FF'); // Exact Swatch Alice Blue
+      meshGrad.addColorStop(1, '#F4FAFD'); // Luminous Glass Shimmer
       ctx.fillStyle = meshGrad;
       ctx.fillRect(0, 0, width, height);
 

@@ -104,68 +104,65 @@ const Header = () => {
   return (
     <>
       <motion.header
-        initial={{ y: -72, opacity: 0 }}
+        initial={{ y: -60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'glass-nav-scrolled h-[64px] shadow-xl shadow-black/25'
-            : 'glass-nav-initial h-[72px]'
-        }`}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="fixed top-3 lg:top-4 left-0 right-0 z-50 px-4 flex justify-center pointer-events-none"
       >
-        <div className="max-w-[1400px] mx-auto px-6 md:px-8 flex items-center justify-between h-full">
-          {/* Left group: Logo + Navigation Links */}
-          <div className="flex items-center gap-8 h-full">
-            {/* Logo and Brand with extra breathing room */}
-            <Link to="/" className="flex items-center select-none h-full pl-1 md:pl-3">
-              <Logo variant="navbar" className="py-1 px-2" />
-            </Link>
+        <div className={`pointer-events-auto w-full max-w-[920px] mx-auto rounded-full transition-all duration-300 flex items-center justify-between px-5 py-1.5 ${
+          isScrolled
+            ? 'bg-white/90 backdrop-blur-2xl border border-gray-200/80 shadow-2xl shadow-blue-950/10 py-1'
+            : 'bg-white/80 backdrop-blur-xl border border-white/80 shadow-lg shadow-black/[0.04] py-1.5'
+        }`}>
+          {/* Left group: Logo */}
+          <Link to="/" className="flex items-center select-none pl-1 scale-90 origin-left">
+            <Logo variant="navbar" className="py-0 px-1" />
+          </Link>
 
-            {/* Desktop Navigation Links */}
-            <motion.nav 
-              variants={navContainerVariants}
-              initial="hidden"
-              animate="visible"
-              className="hidden lg:flex items-center gap-10 h-full"
-            >
-              {navLinks.map((link) => (
-                <motion.div key={link.name} variants={navItemVariants} className="flex items-center h-full">
-                  <NavLink
-                    to={link.path}
-                    style={{ letterSpacing: '0.3px' }}
-                    className={({ isActive }) =>
-                      `group relative text-[18px] font-semibold transition-all duration-[250ms] select-none flex items-center h-full hover:-translate-y-[0.5px] ${
-                        isActive ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#2563EB]'
-                      }`
-                    }
-                  >
-                    {({ isActive }) => (
-                      <div className="relative py-1.5 flex flex-col items-center">
-                        <span className="relative transition-all duration-[250ms] group-hover:[text-shadow:0_0_8px_rgba(37,99,235,0.25)]">
-                          {link.name}
-                        </span>
-                        {/* Hover Underline from Center Outward */}
-                        {!isActive && (
-                          <span className="absolute bottom-[-1px] left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] to-[#F97316] transition-all duration-[250ms] group-hover:w-full" />
-                        )}
-                        {/* Active Underline (No Glow Dot) */}
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeNavUnderline"
-                            className="absolute bottom-[-1px] left-0 w-full h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] to-[#F97316]"
-                            transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </NavLink>
-                </motion.div>
-              ))}
-            </motion.nav>
-          </div>
+          {/* Center group: Desktop Navigation Links */}
+          <motion.nav 
+            variants={navContainerVariants}
+            initial="hidden"
+            animate="visible"
+            className="hidden lg:flex items-center gap-4 xl:gap-6 h-full"
+          >
+            {navLinks.map((link) => (
+              <motion.div key={link.name} variants={navItemVariants} className="flex items-center h-full">
+                <NavLink
+                  to={link.path}
+                  style={{ letterSpacing: '0.2px' }}
+                  className={({ isActive }) =>
+                    `group relative text-[13.5px] font-bold transition-all duration-[250ms] select-none flex items-center py-1 hover:-translate-y-[0.5px] ${
+                      isActive ? 'text-[#2563EB]' : 'text-[#475569] hover:text-[#2563EB]'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <div className="relative flex flex-col items-center">
+                      <span className="relative transition-all duration-[250ms] group-hover:[text-shadow:0_0_8px_rgba(37,99,235,0.25)]">
+                        {link.name}
+                      </span>
+                      {/* Hover Underline from Center Outward */}
+                      {!isActive && (
+                        <span className="absolute bottom-[-3px] left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] to-[#F97316] transition-all duration-[250ms] group-hover:w-full" />
+                      )}
+                      {/* Active Underline */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeNavUnderline"
+                          className="absolute bottom-[-3px] left-0 w-full h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] to-[#F97316]"
+                          transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                        />
+                      )}
+                    </div>
+                  )}
+                </NavLink>
+              </motion.div>
+            ))}
+          </motion.nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* Right group: Desktop Actions */}
+          <div className="hidden lg:flex items-center gap-2.5">
             <MotionLink
               to="/about#verify-credentials"
               onClick={handleVerifyClick}
@@ -176,7 +173,7 @@ const Header = () => {
               whileTap={{ scale: 0.97 }}
               className="relative p-[1.5px] rounded-full bg-gradient-to-r from-[#2563EB]/25 to-[#F97316]/25 hover:from-[#2563EB] hover:to-[#F97316] transition-all duration-300 shadow-sm cursor-pointer flex items-center justify-center select-none group"
             >
-              <span className="px-6 py-2 rounded-full bg-white/90 backdrop-blur-md text-sm font-semibold text-[#0F172A] group-hover:bg-transparent group-hover:text-white transition-all duration-300">
+              <span className="px-4 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11.5px] font-bold text-[#0F172A] group-hover:bg-transparent group-hover:text-white transition-all duration-300">
                 Verify
               </span>
             </MotionLink>
@@ -188,7 +185,7 @@ const Header = () => {
               animate="visible"
               whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(37, 99, 235, 0.35)" }}
               whileTap={{ scale: 0.97 }}
-              className="group px-6 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] hover:from-[#F97316] hover:to-[#2563EB] flex items-center justify-center gap-1.5 select-none transition-all duration-300 shadow-sm cursor-pointer"
+              className="group px-4 py-1.5 rounded-full text-[11.5px] font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] hover:from-[#F97316] hover:to-[#2563EB] flex items-center justify-center gap-1 select-none transition-all duration-300 shadow-sm cursor-pointer"
             >
               <span>Login</span>
             </MotionLink>

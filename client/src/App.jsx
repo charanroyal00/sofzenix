@@ -14,12 +14,15 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 
 import ScrollToTop from './components/ScrollToTop';
+import WireframeLandscape from './components/WireframeLandscape';
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <Routes>
+        {/* Standalone 3D Wireframe Mesh Background View (No UI, No Text, No Logos) */}
+        <Route path="/wireframe" element={<WireframeLandscape />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />

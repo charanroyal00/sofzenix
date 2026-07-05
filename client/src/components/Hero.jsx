@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTrans
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
 import { FaCircleCheck, FaShieldHalved } from 'react-icons/fa6';
+import WireframeLandscape from './WireframeLandscape';
 
 /* ─── Typewriter ─────────────────────────────────────────── */
 const Typewriter = ({ words }) => {
@@ -186,11 +187,12 @@ const Hero = () => {
           transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
           className="absolute top-0 w-[180px] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-6"
         />
+        <WireframeLandscape />
         <Particles isMobile={mobile} />
       </div>
 
       {/* ── CENTRE CONTENT ── */}
-      <motion.div style={{ opacity: fadeOut, y: slideUp }} className="relative z-10 flex flex-col items-center text-center w-full max-w-5xl mx-auto gap-7">
+      <motion.div style={{ opacity: fadeOut, y: slideUp }} className="relative z-10 flex flex-col items-center text-center w-full max-w-4xl mx-auto gap-5">
 
         {/* pill badge */}
         <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
@@ -203,17 +205,17 @@ const Hero = () => {
         </motion.div>
 
         {/* ── HEADLINE ── */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.1 }}
-            className="text-xs font-extrabold uppercase tracking-[0.35em] text-[#F97316]">
+            className="text-[11px] font-extrabold uppercase tracking-[0.35em] text-[#F97316]">
             Sofzenix IT Solutions LLP
           </motion.p>
 
           <motion.h1 initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.7, delay:0.15, ease:'easeOut' }}
-            className="text-4xl sm:text-6xl lg:text-[76px] font-extrabold tracking-tight leading-[1.08] text-[#0F172A]">
+            className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight leading-[1.12] text-[#0F172A]">
             We Build&nbsp;
             <span className="relative inline-block">
-              <Typewriter words={['Intelligent', 'Scalable', 'AI‑Powered', 'Cloud‑Native', 'Enterprise']} />
+              <Typewriter words={['Cloud‑Native', 'Scalable', 'AI‑Powered', 'Intelligent', 'Enterprise']} />
             </span>
             <br />
             <span className="relative">
@@ -221,13 +223,13 @@ const Hero = () => {
               {/* gradient underline */}
               <motion.span
                 initial={{ scaleX:0 }} animate={{ scaleX:1 }} transition={{ duration:0.9, delay:0.9, ease:'easeOut' }}
-                className="absolute -bottom-2 left-0 w-full h-[5px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#8B5CF6] to-[#F97316] origin-left"
+                className="absolute -bottom-1.5 left-0 w-full h-[3.5px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#8B5CF6] to-[#F97316] origin-left"
               />
             </span>
           </motion.h1>
 
           <motion.p initial={{ opacity:0, y:12 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6, delay:0.35 }}
-            className="text-[#475569] text-base md:text-lg font-semibold max-w-2xl mx-auto leading-relaxed mt-2">
+            className="text-[#475569] text-sm md:text-base font-semibold max-w-xl mx-auto leading-relaxed mt-1">
             From custom web apps and mobile platforms to AI integrations and cloud infrastructure — Sofzenix powers enterprises with precision-engineered, secure, and scalable digital products.
           </motion.p>
         </div>
@@ -255,17 +257,14 @@ const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* ── DASHBOARD VISUAL ── */}
+      {/* ── DASHBOARD VISUAL, STATS BAR & SCROLL INDICATOR (Commented out to match clean reference wireframe layout) ──
       <div className="relative z-10 w-full max-w-5xl mx-auto mt-12 px-2">
         <motion.div style={{ x: cardX, y: cardY }}
           initial={{ opacity:0, y:50, scale:0.95 }} animate={{ opacity:1, y:0, scale:1 }}
           transition={{ duration:1, delay:0.6, ease:'easeOut' }}
           className="relative w-full rounded-2xl border border-gray-200 bg-white shadow-[0_24px_64px_rgba(15,23,42,0.08)] overflow-hidden"
         >
-          {/* thin blue top bar */}
           <div className="h-[2px] w-full bg-[#2563EB]" />
-
-          {/* window chrome */}
           <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FAFAFA]">
             <div className="flex gap-1.5">
               {['bg-[#FF5F57]','bg-[#FFBD2E]','bg-[#28CA41]'].map(c=><span key={c} className={`w-2.5 h-2.5 rounded-full ${c}`}/>)}
@@ -277,11 +276,7 @@ const Hero = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse" /> Live
             </span>
           </div>
-
-          {/* dashboard body */}
           <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-
-            {/* LEFT — Service Status */}
             <div className="md:col-span-4 p-5 flex flex-col gap-0">
               <div className="flex items-center justify-between pb-3 mb-1 border-b border-gray-100">
                 <span className="text-[11px] font-semibold text-[#0F172A] uppercase tracking-widest">Services</span>
@@ -308,11 +303,7 @@ const Hero = () => {
                 </motion.div>
               ))}
             </div>
-
-            {/* RIGHT — Metrics + Chart + Activity */}
             <div className="md:col-span-8 flex flex-col divide-y divide-gray-100">
-
-              {/* KPI row */}
               <div className="grid grid-cols-3 divide-x divide-gray-100">
                 {[
                   { label: 'System Uptime',     value: '99.9%', sub: '30-day avg' },
@@ -330,8 +321,6 @@ const Hero = () => {
                   </motion.div>
                 ))}
               </div>
-
-              {/* Chart */}
               <div className="px-5 py-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[11px] font-semibold text-[#0F172A] uppercase tracking-widest">Traffic · 30 days</span>
@@ -358,8 +347,6 @@ const Hero = () => {
                   ))}
                 </svg>
               </div>
-
-              {/* Activity feed */}
               <div className="px-5 py-4 flex flex-col gap-0">
                 <div className="flex items-center justify-between pb-2.5 mb-1 border-b border-gray-100">
                   <span className="text-[11px] font-semibold text-[#0F172A] uppercase tracking-widest">Recent Activity</span>
@@ -372,12 +359,8 @@ const Hero = () => {
             </div>
           </div>
         </motion.div>
-
-        {/* subtle reflection */}
         <div className="w-3/4 h-6 mx-auto bg-[#2563EB]/5 blur-2xl rounded-full mt-1" />
       </div>
-
-      {/* ── STATS BAR ── */}
       <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:1.1, duration:0.6 }}
         className="relative z-10 w-full max-w-5xl mx-auto mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((s,i) => (
@@ -388,8 +371,6 @@ const Hero = () => {
           </motion.div>
         ))}
       </motion.div>
-
-      {/* ── SCROLL INDICATOR ── */}
       <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:1.8 }}
         className="relative z-10 flex flex-col items-center gap-1.5 mt-10 select-none">
         <span className="text-[9px] font-extrabold uppercase tracking-widest text-gray-400">Discover More</span>
@@ -397,7 +378,7 @@ const Hero = () => {
           <FaArrowDown className="text-gray-400 text-xs" />
         </motion.div>
       </motion.div>
-
+      ── */}
     </section>
   );
 };
