@@ -24,11 +24,15 @@ import {
   FaGithub,
   FaTwitter,
   FaInstagram,
-  FaFacebook
+  FaFacebook,
+  FaAws,
+  FaJava
 } from 'react-icons/fa';
+import { SiReact, SiNodedotjs, SiSpringboot, SiDocker, SiMongodb, SiGithub } from 'react-icons/si';
 
 import ReCaptchaCheckbox from '../components/ReCaptchaCheckbox';
 import Testimonials from '../components/Testimonials';
+import PremiumHeroBackground from '../components/PremiumHeroBackground';
 
 import founderImg from '../assets/founder.png';
 const founderPublicImg = '/founder.png';
@@ -434,89 +438,164 @@ const FounderCard = ({ image, name, title, message, quoteAuthor, link }) => {
 };
 
 const EcosystemVisualization = () => {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
   const containerRef = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  // Smooth springs for tilt/parallax
+  const rotateX = useSpring(useTransform(y, [-150, 150], [8, -8]), { stiffness: 90, damping: 22 });
+  const rotateY = useSpring(useTransform(x, [-150, 150], [-8, 8]), { stiffness: 90, damping: 22 });
 
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / 25;
-    const y = (e.clientY - rect.top - rect.height / 2) / 25;
-    setCoords({ x, y });
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left - width / 2;
+    const mouseY = e.clientY - rect.top - height / 2;
+    x.set(mouseX);
+    y.set(mouseY);
   };
 
   const handleMouseLeave = () => {
-    setCoords({ x: 0, y: 0 });
+    x.set(0);
+    y.set(0);
   };
 
-  const nodes = [
-    { name: 'React', x: -80, y: -70, color: '#61DAFB', icon: <TechIcons.React />, desc: 'Frontend UI Platform' },
-    { name: 'NodeJS', x: 80, y: -70, color: '#339933', icon: <TechIcons.Nodejs />, desc: 'High-Concurrency Runtime' },
-    { name: 'MongoDB', x: -90, y: 60, color: '#47A248', icon: <TechIcons.MongoDB />, desc: 'NoSQL Document Store' },
-    { name: 'AWS Cloud', x: 90, y: 60, color: '#FF9900', icon: <TechIcons.AWS />, desc: 'Elastic Cloud Infrastructure' },
-    { name: 'Spring Boot', x: 0, y: 95, color: '#6DB33F', icon: <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#6DB33F]" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>, desc: 'Enterprise Business Logic' }
+  const techNodes = [
+    { icon: SiReact, name: 'React', color: '#61DAFB' },
+    { icon: SiNodedotjs, name: 'Node.js', color: '#339933' },
+    { icon: SiSpringboot, name: 'Spring Boot', color: '#6DB33F' },
+    { icon: FaJava, name: 'Java', color: '#E76F51' },
+    { icon: FaAws, name: 'AWS', color: '#FF9900' },
+    { icon: SiMongodb, name: 'MongoDB', color: '#47A248' },
+    { icon: SiDocker, name: 'Docker', color: '#2496ED' },
+    { icon: SiGithub, name: 'GitHub', color: '#181717' }
   ];
 
+  const radius = 160;
+
   return (
-    <div 
+    <motion.div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full max-w-[420px] aspect-[4/3] bg-white/70 backdrop-blur-xl border border-gray-200/50 rounded-[28px] shadow-2xl p-6 relative flex flex-col justify-between overflow-hidden select-none"
+      style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
+      className="w-full max-w-[530px] aspect-square bg-transparent relative flex items-center justify-center cursor-default group select-none"
     >
-      <div className="absolute top-3 left-4 bg-gray-100/80 border border-gray-200/25 px-2.5 py-0.5 rounded text-[8px] font-extrabold font-mono tracking-widest uppercase text-gray-500 z-20">Ecosystem Network</div>
-      
-      <div className="flex-grow flex items-center justify-center relative">
-        {/* Connection Path Lines */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 400 300">
-          {nodes.map((node, i) => (
-            <motion.line
-              key={i}
-              x1="200"
-              y1="150"
-              x2={200 + node.x}
-              y2={150 + node.y}
-              stroke="#2563EB"
-              strokeWidth="1.5"
-              strokeDasharray="4 4"
-              animate={{ strokeDashoffset: [0, -20] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-            />
-          ))}
-        </svg>
-
-        {/* Center Node */}
-        <motion.div 
-          style={{ x: coords.x * 0.5, y: coords.y * 0.5 }}
-          className="w-20 h-20 rounded-full bg-[#2563EB]/10 border border-[#2563EB]/35 flex items-center justify-center shadow-lg relative z-10 cursor-pointer"
-        >
-          <div className="absolute inset-0 rounded-full bg-[#2563EB]/5 animate-ping opacity-75" />
-          <FaLaptopCode className="text-[#2563EB] text-3xl" />
-        </motion.div>
-
-        {/* Floating tech nodes */}
-        {nodes.map((node) => (
+      {/* Floating particles inside the ecosystem card */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-45">
+        {[...Array(6)].map((_, i) => (
           <motion.div
-            key={node.name}
-            style={{ 
-              x: coords.x * 1.2 + node.x, 
-              y: coords.y * 1.2 + node.y 
+            key={i}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 15, 0],
+              opacity: [0.3, 0.7, 0.3]
             }}
-            whileHover={{ scale: 1.15, zIndex: 30 }}
-            className="absolute w-12 h-12 rounded-full bg-white border border-gray-200/40 shadow-lg flex items-center justify-center cursor-pointer group"
-          >
-            {node.icon}
-            
-            {/* Tooltip on Hover */}
-            <div className="absolute bottom-14 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[9px] font-extrabold px-3 py-1.5 rounded-lg opacity-0 pointer-events-none group-hover:opacity-100 shadow-md transition-all duration-300 w-36 text-center z-50 border border-white/10">
-              <div className="font-bold text-white mb-0.5">{node.name}</div>
-              <div className="text-gray-400 font-semibold">{node.desc}</div>
-              <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-white/10" />
-            </div>
-          </motion.div>
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute w-1.5 h-1.5 rounded-full bg-[#2563EB]/15"
+            style={{
+              left: `${15 + i * 15}%`,
+              top: `${20 + i * 12}%`
+            }}
+          />
         ))}
       </div>
-    </div>
+
+      {/* Rotating orbit ring paths */}
+      <div className="absolute w-[320px] h-[320px] rounded-full border border-[#2563EB]/10 pointer-events-none" />
+      <div className="absolute w-[220px] h-[220px] rounded-full border border-dashed border-[#F97316]/10 pointer-events-none" />
+
+      {/* Animated Orbit Container */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+        className="w-full h-full absolute inset-0 flex items-center justify-center"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* SVG connection lines rotating inside the orbit */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25 group-hover:opacity-40 transition-opacity duration-300" viewBox="0 0 530 530">
+          {techNodes.map((_, i) => {
+            const angle = (i * 360) / techNodes.length;
+            const rad = (angle * Math.PI) / 180;
+            const tx = 265 + Math.cos(rad) * radius;
+            const ty = 265 + Math.sin(rad) * radius;
+            return (
+              <motion.line
+                key={i}
+                x1="265"
+                y1="265"
+                x2={tx}
+                y2={ty}
+                stroke="#2563EB"
+                strokeWidth="1.5"
+                strokeDasharray="4 4"
+                animate={{ strokeDashoffset: [0, -20] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Orbiting nodes */}
+        {techNodes.map((node, i) => {
+          const angle = (i * 360) / techNodes.length;
+          const rad = (angle * Math.PI) / 180;
+          const tx = Math.cos(rad) * radius;
+          const ty = Math.sin(rad) * radius;
+          const Icon = node.icon;
+          return (
+            <motion.div
+              key={node.name}
+              className="absolute w-14 h-14 rounded-full bg-white border border-gray-200/40 shadow-lg flex items-center justify-center cursor-pointer group/node"
+              style={{
+                x: tx,
+                y: ty,
+                transformStyle: 'preserve-3d'
+              }}
+            >
+              {/* Anti-rotate the icons so they remain upright */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+                className="w-full h-full flex items-center justify-center transition-transform duration-300 group-hover/node:scale-115"
+                style={{ color: node.color }}
+              >
+                <Icon className="text-2xl" />
+              </motion.div>
+
+              {/* Tooltip on Hover */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 40, ease: "linear", repeat: Infinity }}
+                className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white text-[9px] font-extrabold px-3 py-1.5 rounded-lg opacity-0 pointer-events-none group-hover/node:opacity-100 shadow-md transition-opacity duration-300 w-28 text-center z-50 border border-white/10"
+              >
+                <div className="font-bold text-white">{node.name}</div>
+                <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-white/10" />
+              </motion.div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
+
+      {/* Center Static Glowing Pulse Node */}
+      <motion.div 
+        style={{ transformStyle: 'preserve-3d', translateZ: 20 }}
+        className="w-28 h-28 rounded-full bg-[#2563EB]/10 border border-[#2563EB]/35 flex items-center justify-center shadow-lg relative z-10 cursor-pointer"
+      >
+        <div className="absolute inset-0 rounded-full bg-[#2563EB]/5 animate-ping opacity-75" />
+        <div className="absolute inset-1.5 rounded-full bg-gradient-to-tr from-[#2563EB] to-[#7C3AED] opacity-10 blur-[8px]" />
+        
+        <div className="w-20 h-20 rounded-full bg-white border border-gray-100 shadow-md flex items-center justify-center relative z-20 group-hover:scale-105 transition-transform duration-300">
+          <FaBrain className="text-[#2563EB] text-4xl animate-pulse" />
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -606,15 +685,10 @@ const About = () => {
   return (
     <div className="bg-transparent min-h-screen text-[#475569] select-none relative overflow-hidden">
       
-      {/* Shifting background aurora mesh gradients */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="mesh-blob mesh-blob-1 -left-[10%] -top-[10%] opacity-25" />
-        <div className="mesh-blob mesh-blob-2 -right-[15%] top-[25%] opacity-30" />
-        <div className="mesh-blob mesh-blob-3 left-[20%] -bottom-[15%] opacity-25" />
+      {/* Premium 3D mesh background covering the entire About Hero */}
+      <div className="absolute inset-0 h-[85vh] z-0 overflow-hidden pointer-events-none">
+        <PremiumHeroBackground />
       </div>
-
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
-      <BackgroundParticles />
 
       {/* ==================================================
           1. HERO SECTION (Fade Up + Blur Staged)
@@ -629,42 +703,131 @@ const About = () => {
             transition={{ duration: 0.85, ease: 'easeOut' }}
             className="lg:col-span-7 text-left flex flex-col items-start"
           >
-            <div className="inline-block px-4 py-1.5 rounded-full bg-[#2563EB]/5 border border-[#2563EB]/10 text-xs font-bold uppercase tracking-widest text-[#2563EB] mb-6 backdrop-blur-md">
-              ABOUT SOFZENIX
-            </div>
+            {/* Premium Pill Badge with pulse animation */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/60 backdrop-blur-md border border-[#2563EB]/25 text-[15px] sm:text-[16px] font-bold uppercase tracking-widest text-[#2563EB] mb-8 relative select-none"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+              <span>⚡ About Sofzenix</span>
+            </motion.div>
             
-            <h1 className="text-3.5xl sm:text-4.5xl md:text-5.5xl font-extrabold tracking-tight text-[#0F172A] mb-6 leading-[1.2] flex flex-col gap-1">
-              <span>Engineering Innovation.</span>
-              <span className="animate-brand-gradient">Building Digital Excellence.</span>
-            </h1>
+            {/* Heading with brand gradient highlighted words */}
+            <motion.h1 
+              initial={{ opacity: 0, x: -35 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-[30px] sm:text-[40px] lg:text-[50px] font-extrabold tracking-tight text-[#0F172A] mb-8 leading-[1.12] flex flex-col gap-1.5"
+            >
+              <span>Building Intelligent Digital Platforms</span>
+              <span>That <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#F97316]">Scale Businesses</span></span>
+            </motion.h1>
             
-            <p className="text-[#475569] text-sm sm:text-base md:text-lg max-w-xl mb-8 leading-relaxed font-semibold">
-              Sofzenix IT Solutions LLP builds scalable software, enterprise solutions, cloud platforms, and AI-powered applications that help businesses innovate and grow.
-            </p>
+            {/* Concise 3-4 line description */}
+            <motion.p 
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-[#475569] text-[15px] sm:text-[17px] lg:text-[19px] leading-[1.75] max-w-[620px] mb-10 font-semibold"
+            >
+              Sofzenix IT Solutions LLP designs enterprise-grade software, AI-powered platforms, cloud infrastructure, and scalable digital products that help startups and organizations innovate with confidence.
+            </motion.p>
 
-            <div className="flex flex-wrap items-center gap-4 mt-2 w-full sm:w-auto">
+            {/* Feature Cards Grid Row */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl mb-14"
+            >
+              {[
+                { 
+                  icon: FaLaptopCode, 
+                  title: "Enterprise Software", 
+                  desc: "Scalable transaction systems and architectures.", 
+                  color: "#2563EB" 
+                },
+                { 
+                  icon: FaBrain, 
+                  title: "AI & Automation", 
+                  desc: "Cognitive workflows and LLM agent integrations.", 
+                  color: "#7C3AED" 
+                },
+                { 
+                  icon: FaCloud, 
+                  title: "Cloud & DevOps", 
+                  desc: "Elastic serverless deployments and microservices.", 
+                  color: "#2563EB" 
+                },
+                { 
+                  icon: FaRocket, 
+                  title: "Mobile & Web Platforms", 
+                  desc: "Bespoke high-performance user interfaces.", 
+                  color: "#F97316" 
+                }
+              ].map((feat, i) => {
+                const Icon = feat.icon;
+                return (
+                  <motion.div 
+                    key={feat.title}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.35 + i * 0.1 }}
+                    whileHover={{ y: -4 }}
+                    className="bg-white/50 backdrop-blur-md border border-[#2563EB]/15 rounded-2xl p-5 flex gap-4 items-start transition-all duration-300 shadow-sm hover:shadow-[0_12px_30px_rgba(37,99,235,0.08)] hover:border-[#2563EB]/40 relative group cursor-default"
+                  >
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center border border-gray-100 shadow-sm bg-white shrink-0 group-hover:scale-110 transition-transform duration-300"
+                      style={{ color: feat.color }}
+                    >
+                      <Icon className="text-xl" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <h4 className="text-lg sm:text-xl lg:text-[22px] font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors duration-300">{feat.title}</h4>
+                      <p className="text-[14px] lg:text-[16px] font-medium text-gray-500 mt-1 leading-relaxed">{feat.desc}</p>
+                    </div>
+                    {/* Hover Glow dot */}
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#F97316] block animate-ping" />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* Custom Interactive Buttons */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.7 }}
+              className="flex flex-wrap items-center gap-5 w-full sm:w-auto"
+            >
               <Link 
                 to="/contact" 
-                className="px-8 py-3.5 rounded-full text-sm font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#38BDF8] shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto overflow-hidden group hover:scale-105"
+                className="relative px-10 h-[58px] rounded-full text-[17px] font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] shadow-md hover:shadow-[0_12px_24px_rgba(37,99,235,0.2),0_0_15px_rgba(249,115,22,0.12)] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto overflow-hidden group hover:scale-[1.03]"
               >
                 <span>Book Consultation</span>
                 <FaArrowRight className="text-xs text-white/80 group-hover:translate-x-1.5 transition-transform duration-300" />
+                <span className="absolute inset-0 w-[30%] h-full bg-white/20 skew-x-[-25deg] translate-x-[-150%] group-hover:translate-x-[400%] transition-transform duration-[1200ms] ease-out pointer-events-none" />
               </Link>
               <Link 
                 to="/portfolio" 
-                className="group px-8 py-3.5 rounded-full text-sm font-bold text-[#2563EB] bg-white border border-[#2563EB]/15 hover:bg-[#2563EB] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto hover:scale-105 shadow-sm"
+                className="group px-10 h-[58px] rounded-full text-[17px] font-bold text-[#2563EB] bg-white border border-[#2563EB] hover:bg-[#2563EB] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto hover:scale-[1.03] shadow-sm hover:shadow-md"
               >
                 <span>Explore Portfolio</span>
-                <FaArrowRight className="text-xs text-[#2563EB]/60 group-hover:translate-x-1.5 transition-transform duration-300 group-hover:text-white" />
+                <FaArrowRight className="text-xs text-[#2563EB] group-hover:text-[#F97316] group-hover:translate-x-1.5 transition-transform duration-300 shrink-0" />
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
 
+          {/* Orbit Illustration */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
-            className="lg:col-span-5 flex justify-center relative min-h-[300px]"
+            className="lg:col-span-5 flex justify-center relative min-h-[300px] lg:-translate-y-12"
           >
             <EcosystemVisualization />
           </motion.div>

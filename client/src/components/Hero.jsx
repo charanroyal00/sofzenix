@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTrans
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
 import { FaCircleCheck, FaShieldHalved } from 'react-icons/fa6';
-import WireframeLandscape from './WireframeLandscape';
+import PremiumHeroBackground from './PremiumHeroBackground';
 
 /* ─── Typewriter ─────────────────────────────────────────── */
 const Typewriter = ({ words }) => {
@@ -24,40 +24,6 @@ const Typewriter = ({ words }) => {
       {text}<motion.span animate={{ opacity: [1,0,1] }} transition={{ duration: 0.8, repeat: Infinity }} className="inline-block w-[3px] h-[0.85em] bg-[#2563EB] ml-0.5 align-middle rounded-sm" />
     </span>
   );
-};
-
-/* ─── Connected Particle Canvas ──────────────────────────── */
-const Particles = ({ isMobile }) => {
-  const ref = useRef(null);
-  useEffect(() => {
-    const c = ref.current; if (!c) return;
-    const ctx = c.getContext('2d');
-    let raf;
-    const resize = () => { c.width = c.parentElement.offsetWidth; c.height = c.parentElement.offsetHeight; };
-    resize(); window.addEventListener('resize', resize);
-    const pts = Array.from({ length: isMobile ? 20 : 55 }, () => ({
-      x: Math.random() * c.width, y: Math.random() * c.height,
-      vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
-      r: Math.random() * 1.8 + 0.6,
-    }));
-    const draw = () => {
-      ctx.clearRect(0, 0, c.width, c.height);
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.hypot(dx, dy);
-          if (d < 120) { ctx.strokeStyle = `rgba(37,99,235,${0.07*(1-d/120)})`; ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke(); }
-        }
-        pts[i].x += pts[i].vx; pts[i].y += pts[i].vy;
-        if (pts[i].x < 0 || pts[i].x > c.width)  pts[i].vx *= -1;
-        if (pts[i].y < 0 || pts[i].y > c.height) pts[i].vy *= -1;
-        ctx.fillStyle = 'rgba(37,99,235,0.18)'; ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, pts[i].r, 0, Math.PI*2); ctx.fill();
-      }
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => { window.removeEventListener('resize', resize); cancelAnimationFrame(raf); };
-  }, [isMobile]);
-  return <canvas ref={ref} className="absolute inset-0 w-full h-full pointer-events-none" />;
 };
 
 /* ─── Live Activity Feed ─────────────────────────────────── */
@@ -127,7 +93,7 @@ const Counter = ({ to, suffix = '' }) => {
 
 /* ════════════════════════════════════════════════════════════
    HERO
-════════════════════════════════════════════════════════════ */
+   ════════════════════════════════════════════════════════════ */
 const Hero = () => {
   const [mobile, setMobile] = useState(false);
   const sectionRef = useRef(null);
@@ -135,12 +101,20 @@ const Hero = () => {
   const sX = useSpring(mX, { stiffness: 60, damping: 18 });
   const sY = useSpring(mY, { stiffness: 60, damping: 18 });
   const { scrollY } = useScroll();
-  const fadeOut = useTransform(scrollY, [0, 500], [1, 0.8]);
-  const slideUp  = useTransform(scrollY, [0, 500], [0, -40]);
-  const cardX = useTransform(sX, [-700, 700], [-12, 12]);
-  const cardY = useTransform(sY, [-700, 700], [-12, 12]);
-  const blobX  = useTransform(sX, [-700, 700], [-30, 30]);
-  const blobY  = useTransform(sY, [-700, 700], [-30, 30]);
+
+  // Scroll effect configurations:
+  // Opacity: 100% -> 90%
+  // Scale: 1 -> 0.98
+  // Brightness: 100% -> 95%
+  const heroScale = useTransform(scrollY, [0, 500], [1, 0.98]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.90]);
+  const heroFilter = useTransform(
+    scrollY,
+    [0, 500],
+    ["brightness(100%)", "brightness(95%)"]
+  );
+
+  const slideUp  = useTransform(scrollY, [0, 500], [0, -20]);
 
   useEffect(() => {
     const h = () => setMobile(window.innerWidth < 768);
@@ -155,44 +129,25 @@ const Hero = () => {
     mY.set(e.clientY - r.top - r.height / 2);
   };
 
-  const stats = [
-    { v: '150', s: '+', label: 'Projects', color: 'text-[#2563EB]' },
-    { v: '80',  s: '+', label: 'Clients',  color: 'text-[#F97316]' },
-    { v: '99',  s: '%', label: 'Uptime',   color: 'text-[#10B981]' },
-    { v: '3',   s: 'x', label: 'ISO Certs',color: 'text-[#8B5CF6]' },
-  ];
-
   const trust = ['Custom Software', 'AI & ML', 'Cloud DevOps', 'Mobile Apps', 'AICTE Approved'];
 
   return (
-    <section
+    <motion.section
       ref={sectionRef}
       onMouseMove={onMove}
       onMouseLeave={() => { mX.set(0); mY.set(0); }}
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-[#F8FAFC]"
+      style={{
+        scale: heroScale,
+        opacity: heroOpacity,
+        filter: heroFilter
+      }}
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-[#FAFBFF] transition-all duration-300"
     >
-      {/* ── BACKGROUND ── */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        {/* blueprint grid */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.4]" />
-        {/* radial vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(37,99,235,0.08),transparent)]" />
-        {/* aurora blobs */}
-        <motion.div style={{ x: blobX, y: blobY }} className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-[#3B82F6]/10 rounded-full blur-[130px]" />
-        <motion.div style={{ x: blobX, y: blobY }} className="absolute top-[30%] -right-40 w-[500px] h-[500px] bg-[#F97316]/8 rounded-full blur-[140px]" />
-        <motion.div className="absolute -bottom-40 left-[20%] w-[480px] h-[480px] bg-[#8B5CF6]/7 rounded-full blur-[120px] animate-pulse-slower" />
-        {/* light beam sweep */}
-        <motion.div
-          animate={{ x: ['-120%', '220%'] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 5 }}
-          className="absolute top-0 w-[180px] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-6"
-        />
-        <WireframeLandscape />
-        <Particles isMobile={mobile} />
-      </div>
+      {/* ── PREMIUM HERO BACKGROUND ── */}
+      <PremiumHeroBackground mouseX={sX} mouseY={sY} />
 
       {/* ── CENTRE CONTENT ── */}
-      <motion.div style={{ opacity: fadeOut, y: slideUp }} className="relative z-10 flex flex-col items-center text-center w-full max-w-4xl mx-auto gap-5">
+      <motion.div style={{ y: slideUp }} className="relative z-10 flex flex-col items-center text-center w-full max-w-4xl mx-auto gap-5">
 
         {/* pill badge */}
         <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }}
@@ -234,16 +189,26 @@ const Hero = () => {
           </motion.p>
         </div>
 
-        {/* ── CTA BUTTONS ── */}
+        {/* ── CTA BUTTONS WITH PREMIUM BACK GLOWS ── */}
         <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.5 }}
-          className="flex flex-wrap justify-center gap-4">
-          <Link to="/services" className="premium-primary-btn px-9 py-4 text-sm font-black uppercase tracking-widest group">
-            <span>Explore Services</span>
-            <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link to="/contact" className="premium-secondary-btn px-9 py-4 text-sm font-black uppercase tracking-widest">
-            Book Free Consultation
-          </Link>
+          className="flex flex-wrap justify-center gap-6 mt-2">
+          
+          {/* Blue Button (Explore Services) with persistent soft blue glow (100px radius, 15% opacity) */}
+          <div className="relative">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-[#2563EB] opacity-15 rounded-full blur-[45px] pointer-events-none" />
+            <Link to="/services" className="premium-primary-btn px-9 py-4 text-sm font-black uppercase tracking-widest group relative z-10 flex items-center gap-2">
+              <span>Explore Services</span>
+              <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Orange Button (Book Free Consultation) with orange hover glow (100px radius, 15% opacity) */}
+          <div className="relative group">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-[#F97316] opacity-0 group-hover:opacity-15 rounded-full blur-[45px] pointer-events-none transition-opacity duration-300" />
+            <Link to="/contact" className="premium-secondary-btn px-9 py-4 text-sm font-black uppercase tracking-widest relative z-10 block">
+              Book Free Consultation
+            </Link>
+          </div>
         </motion.div>
 
         {/* ── TRUST PILLS ── */}
@@ -379,7 +344,7 @@ const Hero = () => {
         </motion.div>
       </motion.div>
       ── */}
-    </section>
+    </motion.section>
   );
 };
 

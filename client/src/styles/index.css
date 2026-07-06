@@ -64,18 +64,17 @@
   }
 }
 
-/* Custom Base Styles for Light Theme & Exact Glassy Ice Blue Background */
 @layer base {
   html {
     scroll-behavior: smooth;
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #F0F8FF;
+    background-color: #FAFBFF;
     color: #475569;
     overflow-x: hidden;
   }
 
   body {
-    background-color: #F0F8FF;
+    background-color: #FAFBFF;
     color: #475569;
     margin: 0;
     padding: 0;
@@ -284,7 +283,7 @@ section {
 }
 
 #hero, .hero-section {
-  background-color: #F8FAFC !important;
+  background-color: #FAFBFF !important;
 }
 #services, .services-section {
   background-color: #FFFFFF !important;

@@ -1,78 +1,92 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaArrowRight, FaCheckCircle, FaStar, FaGlobe, FaMobileAlt, FaDatabase, FaShieldAlt } from 'react-icons/fa';
+import { 
+  FaArrowRight, 
+  FaGlobe, 
+  FaMobileAlt, 
+  FaDatabase, 
+  FaShieldAlt 
+} from 'react-icons/fa';
+import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 
-// Import project screenshots — served from /public for reliable loading
-const imgHotel      = '/project_hotel.png';
-const imgSwadzo     = '/project_swadzo.png';
-const imgAnalytics  = '/project_analytics.png';
-const imgAccounting = '/project_accounting.png';
+// Pure CSS Device Mockup
+const LaptopMockup = ({ screenshot, title }) => (
+  <div className="relative w-full max-w-[480px] mx-auto select-none" style={{ perspective: '1000px' }}>
+    {/* Screen Outer Frame */}
+    <div className="bg-[#1f2937] border-[10px] border-[#111827] rounded-t-2xl shadow-[0_15px_35px_rgba(0,0,0,0.06)] overflow-hidden aspect-[16/10] flex flex-col relative">
+      <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-black/80 z-20" /> {/* Camera */}
+      {/* Screen Display */}
+      <div className="w-full h-full bg-[#F8FAFC] relative flex items-center justify-center p-2">
+        {screenshot ? (
+          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded" />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center p-4">
+            <span className="text-xs font-black uppercase tracking-widest text-[#2563EB] mb-2">{title}</span>
+            <span className="text-[9px] text-[#64748B] font-bold uppercase tracking-wider">Enterprise Console // Active</span>
+          </div>
+        )}
+      </div>
+    </div>
+    {/* Base Plate */}
+    <div className="w-[108%] h-3 bg-[#374151] rounded-b-xl border-t border-white/10 -ml-[4%] relative shadow-[0_6px_10px_rgba(0,0,0,0.04)]">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[#111827] rounded-b" /> {/* Notch */}
+    </div>
+  </div>
+);
+
+const getTagStyle = (tag) => {
+  const brandColors = [
+    'bg-[#2563EB]/5 text-[#2563EB] border-[#2563EB]/15',
+    'bg-[#F97316]/5 text-[#F97316] border-[#F97316]/15',
+    'bg-[#3B82F6]/5 text-[#3B82F6] border-[#3B82F6]/15'
+  ];
+  const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return brandColors[hash % brandColors.length];
+};
 
 const projects = [
   {
-    title: 'Hotel Desk Web App',
-    status: 'Live',
-    description: 'Enterprise hotel management platform with reservation automation, billing, room management, analytics, and guest-relation pipelines.',
-    tech: ['React.js', 'Node.js', 'Tailwind'],
-    image: imgHotel,
-    client: 'Enterprise',
-    industry: 'Hospitality',
-    platform: 'Web Application',
-    metrics: '50K+ Users • 99.9% Uptime',
-    metricsIcon: FaGlobe
+    title: 'Hotel Desk Web Application',
+    category: 'Hospitality',
+    year: 2025,
+    description: 'A modern hotel management platform that streamlines room booking, customer management, reservations, billing, and staff operations through a responsive web dashboard.',
+    tech: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
+    screenshot: '/project_hotel.png',
+    primaryBtnText: 'Live Demo',
+    primaryBtnLink: '/portfolio'
   },
   {
-    title: 'Swadzo Mobile App',
-    status: 'Featured',
-    description: 'Secure mobile banking platform providing instant peer-to-peer payments, biometric authentication, and automated KYC verification flows.',
-    tech: ['Flutter', 'Payments', 'Security'],
-    image: imgSwadzo,
-    client: 'Fintech',
-    industry: 'Finance',
-    platform: 'iOS / Android',
-    metrics: '1M+ Transactions • Bank-Grade',
-    metricsIcon: FaMobileAlt
+    title: 'Swaldo Mobile Application',
+    category: 'Mobile Application',
+    year: 2025,
+    description: 'A secure digital wallet and payment application enabling fast transactions, QR payments, account management, and financial tracking with an intuitive mobile experience.',
+    tech: ['Flutter', 'Firebase', 'Node.js', 'MongoDB', 'REST API'],
+    screenshot: '/project_swadzo.png',
+    primaryBtnText: 'Case Study',
+    primaryBtnLink: '/portfolio'
   },
   {
     title: 'Analytics Dashboard',
-    status: 'Production',
-    description: 'Real-time business intelligence console providing customized KPIs, dynamic reporting, anomaly alerts, and executive insights.',
-    tech: ['Next.js', 'D3', 'Multi-Tenant'],
-    image: imgAnalytics,
-    client: 'SaaS Corp',
-    industry: 'Data Science',
-    platform: 'Cloud Console',
-    metrics: 'Sub-second API • 10M+ Points',
-    metricsIcon: FaDatabase
+    category: 'Business Intelligence',
+    year: 2025,
+    description: 'A real-time analytics dashboard providing interactive charts, KPI monitoring, sales reports, user analytics, and business insights for enterprise decision making.',
+    tech: ['React', 'Node.js', 'MongoDB', 'Chart.js', 'Express.js'],
+    screenshot: '/project_analytics.png',
+    primaryBtnText: 'Live Dashboard',
+    primaryBtnLink: '/portfolio'
   },
   {
     title: 'Accounting Pro Suite',
-    status: 'Completed',
-    description: 'Cloud accounting suite featuring automated ledgers, instant invoicing, multi-bank reconciliation, and tax compliance reporting.',
-    tech: ['React', 'Node.js', 'Finance'],
-    image: imgAccounting,
-    client: 'SMB Partner',
-    industry: 'Finance / ERP',
-    platform: 'Web Portal',
-    metrics: '100% Secure • Audit-Ready',
-    metricsIcon: FaShieldAlt
+    category: 'Finance',
+    year: 2025,
+    description: 'An enterprise accounting platform designed for invoicing, expense management, taxation, financial reporting, payroll, and business accounting workflows.',
+    tech: ['React', 'Java', 'Spring Boot', 'MySQL', 'REST API'],
+    screenshot: '/project_accounting.png',
+    primaryBtnText: 'Case Study',
+    primaryBtnLink: '/portfolio'
   }
 ];
-
-const TechBadgeStyles = {
-  'React.js': { bg: 'bg-[#E6F4FF]', text: 'text-[#2563EB]' },
-  'React': { bg: 'bg-[#E6F4FF]', text: 'text-[#2563EB]' },
-  'Node.js': { bg: 'bg-[#F0FDF4]', text: 'text-[#16A34A]' },
-  'Tailwind': { bg: 'bg-[#F0FDFA]', text: 'text-[#0D9488]' },
-  'Flutter': { bg: 'bg-[#F0F9FF]', text: 'text-[#0284C7]' },
-  'Payments': { bg: 'bg-[#F5F3FF]', text: 'text-[#7C3AED]' },
-  'Security': { bg: 'bg-[#FEF2F2]', text: 'text-[#DC2626]' },
-  'Next.js': { bg: 'bg-[#F8FAFC]', text: 'text-[#0F172A]' },
-  'D3': { bg: 'bg-[#FFF1F2]', text: 'text-[#E11D48]' },
-  'Multi-Tenant': { bg: 'bg-[#FAF5FF]', text: 'text-[#9333EA]' },
-  'Finance': { bg: 'bg-[#ECFDF5]', text: 'text-[#059669]' }
-};
 
 const containerVariants = {
   hidden: {},
@@ -94,102 +108,61 @@ const cardVariants = {
 };
 
 const ProjectCard = ({ proj }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const MetricIcon = proj.metricsIcon;
-
   return (
     <motion.div
       variants={cardVariants}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="group relative premium-card bg-white border border-gray-200/50 rounded-[24px] flex flex-col justify-between h-full overflow-hidden cursor-default"
+      whileHover={{ 
+        y: -10,
+        boxShadow: '0 20px 40px rgba(37, 99, 235, 0.12), 0 0 25px rgba(37, 99, 235, 0.06)'
+      }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="group relative premium-card bg-white border border-gray-200/50 rounded-[24px] flex flex-col justify-between h-full overflow-hidden cursor-default transition-shadow duration-300 p-6"
     >
-      <div className="w-full">
-        {/* Project Screenshot area */}
-        <div className="w-full aspect-[4/3] overflow-hidden bg-gray-50 relative border-b border-gray-100">
-          <img 
-            src={proj.image} 
-            alt={proj.title} 
-            className="w-full h-full object-cover group-hover:scale-[1.08] transition-transform duration-500 [image-rendering:-webkit-optimize-contrast]"
-          />
-          
-          {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 via-transparent to-transparent pointer-events-none" />
-
-          {/* Status Badge */}
-          <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-[#2563EB] bg-white/90 border border-[#2563EB]/15 shadow-sm backdrop-blur-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
-            {proj.status}
-          </span>
+      <div>
+        {/* Mockup Frame inside Card */}
+        <div className="mb-6 bg-[#F8FAFC] border border-gray-200/40 rounded-xl p-4 overflow-hidden flex items-center justify-center">
+          <LaptopMockup title={proj.title} screenshot={proj.screenshot} />
         </div>
 
-        {/* Card Content Area */}
-        <div className="p-6 flex flex-col gap-4 text-left">
-          
-          {/* Client & Industry Metadata Pills Row */}
-          <div className="flex flex-wrap gap-1.5">
-            <span className="px-2.5 py-0.5 rounded-md bg-gray-100 text-[8px] font-bold text-gray-500 uppercase tracking-wider">
-              {proj.client}
-            </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-gray-100 text-[8px] font-bold text-gray-500 uppercase tracking-wider">
-              {proj.industry}
-            </span>
-            <span className="px-2.5 py-0.5 rounded-md bg-[#2563EB]/5 text-[8px] font-bold text-[#2563EB] uppercase tracking-wider">
-              {proj.platform}
-            </span>
-          </div>
+        <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-wider text-[#F97316]">
+          <span>{proj.category}</span>
+          <span>{proj.year}</span>
+        </div>
 
-          {/* Title & Description */}
-          <div>
-            <h3 className="text-base font-extrabold text-[#0F172A] mb-1.5 group-hover:text-[#2563EB] transition-colors leading-tight">
-              {proj.title}
-            </h3>
-            <p className="text-gray-500 text-[11px] font-medium leading-relaxed min-h-[52px]">
-              {proj.description}
-            </p>
-          </div>
+        <h3 className="text-base font-extrabold text-[#0F172A] mb-1.5 group-hover:text-[#2563EB] transition-colors leading-tight">
+          {proj.title}
+        </h3>
+        <p className="text-gray-500 text-[11px] font-medium leading-relaxed mb-6 line-clamp-3">
+          {proj.description}
+        </p>
 
-          {/* Color Tech Badges */}
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {proj.tech.map((tag) => {
-              const style = TechBadgeStyles[tag] || { bg: 'bg-gray-100', text: 'text-gray-500' };
-              return (
-                <span 
-                  key={tag}
-                  className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-tight border border-transparent shadow-sm hover:scale-105 hover:shadow-md transition-all select-none ${style.bg} ${style.text}`}
-                >
-                  {tag}
-                </span>
-              );
-            })}
-          </div>
-
-          {/* Metrics row */}
-          <div className="flex items-center gap-1.5 border-t border-gray-100 pt-3 mt-1 text-gray-400">
-            <MetricIcon className="text-[10px] text-[#FF8A00]" />
-            <span className="text-[9px] font-bold uppercase tracking-wider text-gray-400">
-              {proj.metrics}
+        {/* Color Tech Badges */}
+        <div className="flex flex-wrap gap-1.5 pt-1 mb-6">
+          {proj.tech.map((tag) => (
+            <span 
+              key={tag}
+              className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-tight border border-transparent shadow-sm hover:scale-105 hover:shadow-md transition-all select-none ${getTagStyle(tag)}`}
+            >
+              {tag}
             </span>
-          </div>
-
+          ))}
         </div>
       </div>
 
       {/* Card Actions Bottom Area */}
-      <div className="p-6 pt-0 mt-auto w-full">
+      <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-auto w-full">
         <Link 
           to="/portfolio"
-          className="w-full pt-3 border-t border-gray-100 flex items-center justify-between overflow-hidden select-none cursor-pointer"
+          className="premium-secondary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center transition-all duration-300"
         >
-          <span className="text-[10px] font-extrabold text-[#2563EB] uppercase tracking-widest group-hover:translate-x-1 transition-transform duration-300">
-            View Details
-          </span>
-          <motion.span 
-            animate={{ x: isHovered ? 4 : 0 }} 
-            className="text-[#2563EB] flex items-center"
-          >
-            <FaArrowRight className="text-[9px]" />
-          </motion.span>
+          View Details
+        </Link>
+        <Link 
+          to={proj.primaryBtnLink}
+          className="premium-primary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center flex items-center justify-center gap-1.5 transition-all duration-300"
+        >
+          <span>{proj.primaryBtnText}</span>
+          <FaArrowUpRightFromSquare className="text-[10px]" />
         </Link>
       </div>
     </motion.div>
@@ -237,17 +210,17 @@ const PortfolioPreview = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-gray-400 text-sm md:text-base font-semibold leading-relaxed"
           >
-            A snapshot of enterprise platforms, cloud products, and growth initiatives we've delivered with structural craftsmanship and measurable impact.
+            A snapshot of enterprise platforms, hospitality dashboard applications, financial technologies, and real-time business intelligence engines we've delivered with structural craftsmanship and measurable impact.
           </motion.p>
         </div>
 
-        {/* Portfolio Staggered 4-Column Grid */}
+        {/* Portfolio Staggered 3-Column Grid */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
         >
           {projects.map((proj) => (
             <ProjectCard key={proj.title} proj={proj} />

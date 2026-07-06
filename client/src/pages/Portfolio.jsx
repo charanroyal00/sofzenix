@@ -49,9 +49,9 @@ const LaptopMockup = ({ screenshot, title }) => (
     <div className="bg-[#1f2937] border-[10px] border-[#111827] rounded-t-2xl shadow-[0_15px_35px_rgba(0,0,0,0.06)] overflow-hidden aspect-[16/10] flex flex-col relative">
       <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-black/80 z-20" /> {/* Camera */}
       {/* Screen Display */}
-      <div className="w-full h-full bg-[#F8FAFC] relative flex items-center justify-center p-2">
+      <div className="w-full h-full bg-[#F8FAFC] relative flex items-center justify-center p-1">
         {screenshot ? (
-          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded" />
+          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded-[6px]" />
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#2563EB] mb-2">{title}</span>
@@ -67,194 +67,167 @@ const LaptopMockup = ({ screenshot, title }) => (
   </div>
 );
 
-const TabletMockup = ({ screenshot, title }) => (
-  <div className="relative w-full max-w-[260px] mx-auto select-none">
-    {/* Frame */}
-    <div className="bg-[#1f2937] border-[8px] border-[#111827] rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.05)] overflow-hidden aspect-[3/4] flex flex-col relative p-1">
-      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-black/80 z-20" /> {/* Camera */}
-      {/* Display */}
-      <div className="w-full h-full bg-[#F8FAFC] rounded-lg relative flex items-center justify-center p-2">
-        {screenshot ? (
-          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded" />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center p-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#2563EB] mb-1">Tablet UI</span>
-            <span className="text-[8px] text-[#64748B] font-semibold uppercase">{title}</span>
-          </div>
-        )}
+const PhoneMockup = ({ screenshot, title }) => (
+  <div className="relative w-full max-w-[190px] mx-auto select-none">
+    <div className="bg-[#111827] rounded-[36px] p-2.5 shadow-[0_20px_45px_rgba(0,0,0,0.12)] border-[3px] border-gray-800 aspect-[9/19] flex flex-col relative overflow-hidden">
+      {/* Notch */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 w-16 h-3 bg-black rounded-full z-20 flex items-center justify-center">
+        <span className="w-1 h-1 rounded-full bg-gray-900" />
       </div>
-      <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border border-[#4b5563] z-20 cursor-pointer" /> {/* Home button */}
+      {/* Screen Display */}
+      <div className="w-full h-full bg-white rounded-[26px] overflow-hidden relative border border-black/5">
+        <img src={screenshot} alt={title} className="w-full h-full object-cover" />
+      </div>
     </div>
   </div>
 );
 
-const MobileMockup = ({ screenshot, title }) => (
-  <div className="relative w-full max-w-[150px] mx-auto select-none">
-    {/* Frame */}
-    <div className="bg-[#1f2937] border-[6px] border-[#111827] rounded-2xl shadow-[0_15px_25px_rgba(0,0,0,0.05)] overflow-hidden aspect-[9/19] flex flex-col relative p-0.5">
-      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-2 rounded-full bg-[#111827] z-20 flex items-center justify-center">
-        <span className="w-1 h-1 rounded-full bg-gray-700" />
-      </div> {/* Notch */}
-      {/* Display */}
-      <div className="w-full h-full bg-[#F8FAFC] rounded-[10px] relative flex items-center justify-center p-1">
-        {screenshot ? (
-          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded-[8px]" />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center p-1">
-            <span className="text-[9px] font-black uppercase tracking-widest text-[#F97316] mb-0.5">Mobile View</span>
-            <span className="text-[7px] text-[#64748B] font-semibold truncate max-w-full">{title}</span>
-          </div>
-        )}
+const DesktopMonitorMockup = ({ screenshot, title }) => (
+  <div className="relative w-full max-w-[480px] mx-auto select-none flex flex-col items-center">
+    {/* Screen Frame */}
+    <div className="bg-[#111827] p-2 rounded-t-2xl border border-gray-800 shadow-[0_20px_45px_rgba(0,0,0,0.08)] w-full aspect-[16/10] overflow-hidden relative">
+      <div className="w-full h-full bg-white rounded-lg overflow-hidden relative">
+        <img src={screenshot} alt={title} className="w-full h-full object-cover" />
       </div>
+    </div>
+    {/* Monitor Stand */}
+    <div className="w-16 h-8 bg-[#374151] border-l border-r border-gray-700 shadow-sm" />
+    <div className="w-36 h-2 bg-[#1f2937] rounded-full shadow-md" />
+  </div>
+);
+
+const BrowserMockup = ({ screenshot, title }) => (
+  <div className="relative w-full max-w-[480px] mx-auto select-none bg-[#111827] rounded-2xl border border-gray-800 shadow-[0_20px_45px_rgba(0,0,0,0.08)] overflow-hidden aspect-[16/10] flex flex-col">
+    {/* Window Controls Header */}
+    <div className="h-7 px-3 bg-gray-950 border-b border-gray-800 flex items-center gap-1.5 shrink-0">
+      <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444] opacity-80" />
+      <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] opacity-80" />
+      <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] opacity-80" />
+      <div className="h-4.5 w-44 bg-gray-900 text-[8px] text-gray-500 flex items-center justify-center font-bold truncate px-2 ml-4 rounded border border-gray-800">
+        https://sofzenix.com/portal
+      </div>
+    </div>
+    {/* Display Screen */}
+    <div className="w-full h-full bg-white overflow-hidden relative">
+      <img src={screenshot} alt={title} className="w-full h-full object-cover" />
     </div>
   </div>
 );
+
+const getTagStyle = (tag) => {
+  const brandColors = [
+    'bg-[#2563EB]/5 text-[#2563EB] border-[#2563EB]/15',
+    'bg-[#F97316]/5 text-[#F97316] border-[#F97316]/15',
+    'bg-[#3B82F6]/5 text-[#3B82F6] border-[#3B82F6]/15'
+  ];
+  const hash = tag.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return brandColors[hash % brandColors.length];
+};
+
+const renderProjectMockup = (project) => {
+  switch (project.id) {
+    case 1:
+      return <DesktopMonitorMockup screenshot={project.screenshot} title={project.title} />;
+    case 2:
+      return <PhoneMockup screenshot={project.screenshot} title={project.title} />;
+    case 3:
+      return <LaptopMockup screenshot={project.screenshot} title={project.title} />;
+    case 4:
+      return <BrowserMockup screenshot={project.screenshot} title={project.title} />;
+    default:
+      return <LaptopMockup screenshot={project.screenshot} title={project.title} />;
+  }
+};
 
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeFAQ, setActiveFAQ] = useState(null);
 
-  // Statistics counters
-  const [stats, setStats] = useState({ projects: 0, clients: 0, industries: 0, years: 0 });
-  const statsSectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          let pVal = 0, cVal = 0, iVal = 0, yVal = 0;
-          const interval = setInterval(() => {
-            let updated = false;
-            if (pVal < 50) { pVal += 2; updated = true; } else pVal = 50;
-            if (cVal < 20) { cVal += 1; updated = true; } else cVal = 20;
-            if (iVal < 8) { iVal += 1; updated = true; } else iVal = 8;
-            if (yVal < 5) { yVal += 1; updated = true; } else yVal = 5;
-
-            setStats({ projects: pVal, clients: cVal, industries: iVal, years: yVal });
-            if (!updated) clearInterval(interval);
-          }, 45);
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    if (statsSectionRef.current) observer.observe(statsSectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   const filters = [
     { id: 'all', name: 'All' },
-    { id: 'web', name: 'Web Development' },
-    { id: 'mobile', name: 'Mobile Applications' },
-    { id: 'enterprise', name: 'Enterprise Software' },
-    { id: 'cloud', name: 'Cloud Solutions' },
-    { id: 'ai', name: 'AI Solutions' },
-    { id: 'uiux', name: 'UI/UX' }
+    { id: 'hospitality', name: 'Hospitality' },
+    { id: 'mobile', name: 'Mobile Application' },
+    { id: 'bi', name: 'Business Intelligence' },
+    { id: 'finance', name: 'Finance' }
   ];
 
   const projectsData = [
     {
       id: 1,
-      title: 'MedConnect Care Coordination Platform',
-      category: ['enterprise', 'web'],
-      tags: ['Java', 'Spring Boot', 'React', 'SQL', 'IT Consulting'],
-      industry: 'Healthcare',
-      description: 'An enterprise-grade patient portal and clinical workflow automation platform ensuring secure HIPAA-compliant records exchange.',
-      clientType: 'Private Medical Network',
+      title: 'Hotel Desk Web Application',
+      category: ['hospitality'],
+      tags: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Tailwind CSS'],
+      industry: 'Hospitality',
+      description: 'A modern hotel management platform that streamlines room booking, customer management, reservations, billing, and staff operations through a responsive web dashboard.',
+      clientType: 'Boutique Hotel Chain',
       year: 2025,
-      screenshot: null,
-      challenge: 'The client faced high data fragmentation and delayed patient responses across 12 legacy clinics operating isolated systems.',
-      solution: 'We engineered a centralized Spring Boot architecture integrated with a real-time React dashboard. Integrated secure FHIR API standards for structured medical records exchange.',
-      features: ['Secure Messaging', 'Smart Booking Engine', 'HIPAA compliant Document Vault', 'Multi-clinic Administration'],
-      timeline: '8 Months',
-      teamSize: 6,
-      benefits: ['35% Reduction in Admin Overhead', '4.9/5 Patient Satisfaction Score', 'Zero Data Breaches Post-launch']
+      screenshot: '/project_hotel.png',
+      challenge: 'The client struggled with manual spreadsheet bookings, leading to overbooking errors and inefficient billing processes.',
+      solution: 'Developed a centralized room booking system with automated email confirmations, integrated Stripe billing, and a dynamic staff dashboard.',
+      features: ['Real-time room status', 'Automated billing', 'Guest profiles', 'Analytics dashboard'],
+      timeline: '4 Months',
+      teamSize: 4,
+      benefits: ['95% reduction in booking errors', '40% faster guest check-in', '100% automated invoicing'],
+      primaryBtnText: 'Live Demo',
+      primaryBtnLink: '#contact-footer'
     },
     {
       id: 2,
-      title: 'ShopVibe E-Commerce Mobile Suite',
-      category: ['mobile', 'web'],
-      tags: ['MERN Stack', 'React', 'Node.js', 'MongoDB', 'React Native'],
-      industry: 'E-Commerce',
-      description: 'A high-performance iOS and Android e-commerce suite featuring offline cart synchronization, instant catalog search, and Stripe payment nodes.',
-      clientType: 'Retail Brand Startup',
+      title: 'Swaldo Mobile Application',
+      category: ['mobile'],
+      tags: ['Flutter', 'Firebase', 'Node.js', 'MongoDB', 'REST API'],
+      industry: 'Mobile Application',
+      description: 'A secure digital wallet and payment application enabling fast transactions, QR payments, account management, and financial tracking with an intuitive mobile experience.',
+      clientType: 'Fintech Startup',
       year: 2025,
-      screenshot: null,
-      challenge: 'Slow catalog page loads on mobile networks causing cart abandonment rates to surpass 68%.',
-      solution: 'Built a lightweight React Native app running a local offline-first SQLite database that syncs in the background with a MongoDB database via secure sockets.',
-      features: ['Offline Syncing Cart', 'Instant Elasticsearch Bar', 'Stripe & Apple Pay Integration', 'Dynamic Inventory Alerts'],
-      timeline: '5 Months',
-      teamSize: 4,
-      benefits: ['Catalog Load Speeds Under 80ms', '42% Spike in Mobile Conversions', '99.98% Service Uptime']
+      screenshot: '/project_swadzo.png',
+      challenge: 'Existing local payment systems lacked user-friendly mobile interfaces, resulting in high transaction drop-off rates.',
+      solution: 'Built a high-performance Flutter mobile application with bank-grade encryption, instant QR scanning, and push notifications.',
+      features: ['Secure QR payments', 'Biometric login', 'Real-time transaction history', 'Expense analytics'],
+      timeline: '6 Months',
+      teamSize: 5,
+      benefits: ['Over 100k active users in first month', '99.99% transaction success rate', 'Slashed payment latency to sub-seconds'],
+      primaryBtnText: 'Case Study',
+      primaryBtnLink: '#contact-footer'
     },
     {
       id: 3,
-      title: 'Optima Resource Planning Engine',
-      category: ['enterprise', 'cloud'],
-      tags: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker', 'AWS'],
-      industry: 'Manufacturing',
-      description: 'A multi-tenant supply chain dashboard and resource allocation ERP platform designed for distributed manufacturing assembly lines.',
-      clientType: 'Global Industrial Group',
-      year: 2024,
-      screenshot: null,
-      challenge: 'Legacy system downtime and stock estimation errors leading to production line delays and raw material wastage.',
-      solution: 'Developed a robust Java Spring Boot ERP containerized with Docker and scaled across AWS Elastic Kubernetes instances. Integrated real-time logistics tracking.',
-      features: ['Telemetry Stock Tracker', 'AI Supply Chain Forecasts', 'Multi-factory ERP Console', 'Automated Material Ordering'],
-      timeline: '10 Months',
-      teamSize: 8,
-      benefits: ['Reduced Stock Estimation Errors by 88%', 'Saved $240K Annually in Waste', 'Production Output Lifted by 15%']
+      title: 'Analytics Dashboard',
+      category: ['bi'],
+      tags: ['React', 'Node.js', 'MongoDB', 'Chart.js', 'Express.js'],
+      industry: 'Business Intelligence',
+      description: 'A real-time analytics dashboard providing interactive charts, KPI monitoring, sales reports, user analytics, and business insights for enterprise decision making.',
+      clientType: 'Enterprise SaaS Provider',
+      year: 2025,
+      screenshot: '/project_analytics.png',
+      challenge: 'Executives were unable to get consolidated business analytics in real time, causing delays in strategic decision-making.',
+      solution: 'Constructed a real-time data sync pipeline rendering key sales and user growth metrics via beautiful charts.',
+      features: ['Interactive charts', 'KPI monitoring', 'Automated weekly reports', 'Role-based access control'],
+      timeline: '5 Months',
+      teamSize: 3,
+      benefits: ['Slashed report generation time by 90%', '25% increase in operational efficiency', 'Real-time tracking of 50+ critical metrics'],
+      primaryBtnText: 'Live Dashboard',
+      primaryBtnLink: '#contact-footer'
     },
     {
       id: 4,
-      title: 'EduSphere Virtual Learning LMS',
-      category: ['web', 'uiux'],
-      tags: ['MERN Stack', 'React', 'Node.js', 'Express', 'MongoDB', 'Firebase'],
-      industry: 'Education',
-      description: 'A responsive digital classroom LMS hosting real-time whiteboard sessions, assignments, and integrated sandboxed developer coding spaces.',
-      clientType: 'EdTech Training Group',
-      year: 2024,
-      screenshot: null,
-      challenge: 'High lag during interactive whiteboard lessons and slow code editor compile times in legacy systems.',
-      solution: 'Re-architected client-side components with custom canvas rendering. Built virtual container sandboxes using secure API endpoints for developer course compiles.',
-      features: ['Live Interactive Whiteboard', 'Built-in Dev Sandbox', 'Automated Grading System', 'Dynamic Course Timelines'],
-      timeline: '6 Months',
-      teamSize: 5,
-      benefits: ['Low-latency Interactive Streams', '55K Active Learners Enrolled', 'Zero Server Outages During Peak Finals']
-    },
-    {
-      id: 5,
-      title: 'Apex Predictive Finance Engine',
-      category: ['ai', 'cloud'],
-      tags: ['Node.js', 'React', 'MongoDB', 'AWS', 'AI Solutions'],
+      title: 'Accounting Pro Suite',
+      category: ['finance'],
+      tags: ['React', 'Java', 'Spring Boot', 'MySQL', 'REST API'],
       industry: 'Finance',
-      description: 'An AI-powered quantitative risk assessment dashboard processing live market data feeds to compute future volatility indicators.',
-      clientType: 'Investment Fund Group',
+      description: 'An enterprise accounting platform designed for invoicing, expense management, taxation, financial reporting, payroll, and business accounting workflows.',
+      clientType: 'Global Logistics Firm',
       year: 2025,
-      screenshot: null,
-      challenge: 'High compute latencies on heavy portfolios delayed critical trading decisions.',
-      solution: 'Engineered a specialized Node.js event-loop dispatcher running micro-calculators on AWS instances to process market variables asynchronously.',
-      features: ['AI Trend Modeler', 'Multi-portfolio Risk Check', 'Continuous Volatility Indexing', 'Instant Market Trade Alerts'],
-      timeline: '7 Months',
-      teamSize: 5,
-      benefits: ['Compute Latency Slashed to 12ms', 'Increased Trading Speed by 300%', 'Portfolios Value Risk Managed Correctly']
-    },
-    {
-      id: 6,
-      title: 'SmartCity Utility Control Grid',
-      category: ['cloud', 'enterprise'],
-      tags: ['Java', 'Spring Boot', 'Node.js', 'PostgreSQL', 'Docker', 'AWS'],
-      industry: 'Logistics',
-      description: 'A cloud-native telemetry dashboard monitoring municipal water valves, electrical grid load distribution, and logistics route schedules.',
-      clientType: 'Municipal Service Provider',
-      year: 2024,
-      screenshot: null,
-      challenge: 'High complexity in tracking 25,000 active grid sensors with different data protocols.',
-      solution: 'Built a lightweight Java Spring Boot listener utilizing Redis cache streams to aggregate and unify sensor data before saving to PostgreSQL database.',
-      features: ['Interactive Map Console', 'Automatic Grid Cutoff triggers', 'Sensor Uptime Analytics', 'Logistics Route Optimization'],
-      timeline: '9 Months',
-      teamSize: 7,
-      benefits: ['Sensor Failure Resolution Under 4 Min', '18% Savings in Municipal Energy', '99.999% Database Write Integrity']
+      screenshot: '/project_accounting.png',
+      challenge: 'Multi-currency billing and compliance reporting was manual and prone to errors.',
+      solution: 'Developed an enterprise-grade web application featuring automated tax calculation, multi-currency ledger management, and automated payroll processes.',
+      features: ['Multi-currency ledger', 'Automated tax calculation', 'Payroll automation', 'Comprehensive financial reports'],
+      timeline: '8 Months',
+      teamSize: 6,
+      benefits: ['Saved $120k annually in accounting overhead', 'Zero compliance reporting delays', 'Fully audit-ready system'],
+      primaryBtnText: 'Case Study',
+      primaryBtnLink: '#contact-footer'
     }
   ];
 
@@ -308,16 +281,13 @@ const Portfolio = () => {
   ];
 
   const testimonials = [
-    { name: 'R. Sharma', company: 'HealthLink Net', review: 'Sofzenix delivered our HIPAA patient portal 3 weeks early. Uptime has been solid and coding quality is excellent.', rating: 5 },
-    { name: 'J. Patterson', company: 'ShopVibe Brand', review: 'Mobile e-commerce suite conversions surged by 42%. The background sync solution resolved our network load issues.', rating: 5 },
-    { name: 'S. K. Mehta', company: 'Apex Fund Group', review: 'The real-time quantitative risk models run asynchronously. Compute latency slashed to 12ms. Amazing speed.', rating: 5 },
-    { name: 'T. Wagner', company: 'Munich Utilities', review: 'Our utility grid dashboard monitors 25K active sensors flawlessly. Highly structured Spring Boot framework.', rating: 5 }
+    { name: 'K. Patel', company: 'Grande Hotel Group', review: 'The Hotel Desk Web App has automated our room booking and billing. Guest check-ins are much faster and booking errors have been eliminated.', rating: 5 },
+    { name: 'J. Patterson', company: 'Swaldo Pay', review: 'Swaldo Mobile App transaction times are incredibly fast and users love the biometric security feature. Excellent security standard.', rating: 5 },
+    { name: 'S. K. Mehta', company: 'SaaS Corp', review: 'The Analytics Dashboard integrated all our KPIs seamlessly. Slashed weekly report generation time by 90%. Exceptional work!', rating: 5 },
+    { name: 'T. Wagner', company: 'Globex Logistics', review: 'Accounting Pro Suite automated our multi-currency ledgers. We saved over $120k in operational overhead in less than a year.', rating: 5 }
   ];
 
-  const marqueeClients = [
-    'MedConnect Network', 'ShopVibe Retail', 'Optima Logistics', 'EduSphere EdTech',
-    'Apex Quant Fund', 'SmartCity Municipal', 'Vetrix DevOps', 'Unlox Access'
-  ];
+
 
   const whyChooseUs = [
     { title: 'Experienced Engineers', icon: FaLaptopCode, desc: 'A senior-focused development team versed in large scale deployments.' },
@@ -335,7 +305,7 @@ const Portfolio = () => {
       <BackgroundDecorations />
 
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[75vh] flex items-center justify-center pt-32 pb-16 px-6 md:px-8 border-b border-gray-200/20">
+      <section className="relative min-h-[60vh] flex items-center justify-center pt-24 pb-8 px-6 md:px-8">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Text */}
           <motion.div 
@@ -367,43 +337,57 @@ const Portfolio = () => {
             </div>
           </motion.div>
 
-          {/* Right Mockup Showcase */}
+          {/* Right Side: Multi-device Overlapping Premium Showcase */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.75, ease: 'easeOut', delay: 0.15 }}
-            className="lg:col-span-6 flex justify-center relative"
+            transition={{ duration: 0.85, ease: 'easeOut', delay: 0.15 }}
+            className="lg:col-span-6 relative flex items-center justify-center min-h-[460px] md:min-h-[500px]"
           >
-            <div className="relative w-full max-w-[500px]">
-              <LaptopMockup title="SOFZENIX PORTFOLIO SUITE" />
-              {/* Secondary Tablet Mockup floating behind */}
-              <div className="absolute -bottom-8 -left-12 w-[180px] hidden md:block scale-95 opacity-90 z-20">
-                <TabletMockup title="MEDCONNECT APP" />
-              </div>
+            {/* Ambient Background Glows */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-gradient-to-tr from-[#2563EB]/15 to-[#F97316]/10 rounded-full blur-[80px] pointer-events-none z-0" />
+            
+            {/* Project 1: Desktop Monitor (Hotel Desk) - Back Layer left */}
+            <div className="absolute left-0 top-12 z-10 w-[240px] md:w-[320px] opacity-75 hover:opacity-100 hover:z-30 transition-all duration-300 transform -rotate-2 select-none">
+              <DesktopMonitorMockup screenshot="/project_hotel.png" title="Hotel Desk Dashboard" />
             </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* 2. PORTFOLIO STATISTICS */}
-      <section ref={statsSectionRef} className="py-16 px-6 md:px-8 border-b border-gray-200/20">
-        <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="text-center p-6 bg-white/80 border border-gray-200/50 rounded-2xl shadow-sm">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-[#2563EB] mb-2">{stats.projects}+</h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Projects Delivered</p>
-          </div>
-          <div className="text-center p-6 bg-white/80 border border-gray-200/50 rounded-2xl shadow-sm">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-[#F97316] mb-2">{stats.clients}+</h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Enterprise Clients</p>
-          </div>
-          <div className="text-center p-6 bg-white/80 border border-gray-200/50 rounded-2xl shadow-sm">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-[#2563EB] mb-2">{stats.industries}+</h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Industries Served</p>
-          </div>
-          <div className="text-center p-6 bg-white/80 border border-gray-200/50 rounded-2xl shadow-sm">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-[#0F172A] mb-2">{stats.years}+</h3>
-            <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Years of Experience</p>
-          </div>
+            {/* Project 3: Laptop (Analytics) - Center Layer main */}
+            <div className="absolute left-[15%] md:left-[20%] top-24 z-20 w-[260px] md:w-[360px] shadow-2xl hover:scale-105 transition-transform duration-300 select-none">
+              <LaptopMockup screenshot="/project_analytics.png" title="Analytics Dashboard" />
+            </div>
+
+            {/* Project 2: Phone (Swaldo Mobile) - Front Layer right */}
+            <div className="absolute right-[-10px] md:right-4 top-16 z-30 w-[100px] md:w-[130px] shadow-xl hover:scale-110 transition-transform duration-300 select-none">
+              <PhoneMockup screenshot="/project_swadzo.png" title="Swaldo Mobile App" />
+            </div>
+
+            {/* Floating Glassmorphism Metric Card 1 */}
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+              className="absolute -top-4 left-1/4 z-40 bg-white/80 backdrop-blur-md border border-gray-200/50 p-2.5 rounded-xl shadow-lg flex items-center gap-2 select-none"
+            >
+              <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-ping" />
+              <div className="flex flex-col text-[8px] md:text-[9px] font-bold text-left">
+                <span className="text-gray-400 uppercase tracking-widest">System Status</span>
+                <span className="text-[#0F172A]">99.99% Uptime Scale</span>
+              </div>
+            </motion.div>
+
+            {/* Floating Glassmorphism Metric Card 2 */}
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+              className="absolute bottom-8 right-1/4 z-40 bg-white/80 backdrop-blur-md border border-gray-200/50 p-2.5 rounded-xl shadow-lg flex items-center gap-2 select-none"
+            >
+              <span className="text-[12px] text-[#F97316]">🚀</span>
+              <div className="flex flex-col text-[8px] md:text-[9px] font-bold text-left">
+                <span className="text-gray-400 uppercase tracking-widest">Performance</span>
+                <span className="text-[#0F172A]">Sub-second latency API</span>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -436,7 +420,7 @@ const Portfolio = () => {
           {/* 4. FEATURED PROJECTS GRID */}
           <motion.div 
             layout 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left"
           >
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project) => (
@@ -446,13 +430,19 @@ const Portfolio = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4 }}
-                  className="premium-card bg-white border border-gray-200/50 rounded-[24px] p-6 flex flex-col justify-between"
+                  whileHover={{ 
+                    y: -10,
+                    boxShadow: '0 20px 40px rgba(37, 99, 235, 0.12), 0 0 25px rgba(37, 99, 235, 0.06)'
+                  }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="premium-card bg-white border border-gray-200/50 hover:border-[#2563EB]/40 rounded-[24px] p-6 flex flex-col justify-between h-full transition-all duration-300 relative overflow-hidden group"
                 >
                   <div>
                     {/* Mockup Frame inside Card */}
-                    <div className="mb-6 bg-[#F8FAFC] border border-gray-200/40 rounded-xl p-4 overflow-hidden flex items-center justify-center">
-                      <LaptopMockup title={project.title} />
+                    <div className="mb-6 bg-[#F8FAFC] border border-gray-200/40 rounded-xl p-4 overflow-hidden flex items-center justify-center h-[220px] transition-all duration-500 group-hover:bg-gradient-to-br group-hover:from-[#2563EB]/5 group-hover:to-[#F97316]/5">
+                      <div className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                        {renderProjectMockup(project)}
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-wider text-[#F97316]">
@@ -460,27 +450,30 @@ const Portfolio = () => {
                       <span>{project.year}</span>
                     </div>
 
-                    <h3 className="text-lg font-extrabold text-[#0F172A] mb-3">{project.title}</h3>
-                    <p className="text-[#475569] text-xs font-semibold leading-relaxed mb-6">{project.description}</p>
+                    <h3 className="text-lg font-extrabold text-[#0F172A] mb-3 transition-colors duration-350 group-hover:text-[#2563EB]">{project.title}</h3>
+                    <p className="text-[#475569] text-xs font-semibold leading-relaxed mb-6 line-clamp-3">{project.description}</p>
                     
                     <div className="flex flex-wrap gap-2 mb-6">
                       {project.tags.map((tag) => (
-                        <span key={tag} className="px-2 py-0.5 rounded bg-[#F8FAFC] border border-gray-200/60 text-[9px] font-bold text-[#64748B]">
+                        <span key={tag} className={`px-2 py-0.5 rounded border text-[9px] font-bold transition-all duration-300 hover:scale-110 hover:shadow-sm ${getTagStyle(tag)}`}>
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 pt-4 border-t border-gray-200/10">
+                  <div className="flex items-center gap-3 pt-4 border-t border-gray-200/10">
                     <button 
                       onClick={() => setSelectedProject(project)}
-                      className="premium-secondary-btn px-4 py-2 text-xs font-bold cursor-pointer"
+                      className="premium-secondary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center transition-all duration-300"
                     >
                       View Details
                     </button>
-                    <a href="#contact-footer" className="text-xs font-bold text-[#2563EB] hover:text-[#F97316] transition-colors flex items-center gap-1.5">
-                      <span>Case Study</span>
+                    <a 
+                      href={project.primaryBtnLink} 
+                      className="premium-primary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center flex items-center justify-center gap-1.5 transition-all duration-300"
+                    >
+                      <span>{project.primaryBtnText}</span>
                       <FaArrowUpRightFromSquare className="text-[10px]" />
                     </a>
                   </div>
@@ -503,41 +496,41 @@ const Portfolio = () => {
             {/* Devices layout */}
             <div className="lg:col-span-6 relative flex flex-col items-center justify-center p-8 bg-[#F8FAFC] border border-gray-200/50 rounded-3xl h-[420px] overflow-hidden shadow-sm">
               <div className="absolute inset-0 bg-gradient-to-tr from-[#2563EB]/5 to-transparent pointer-events-none" />
-              <LaptopMockup title="Optima ERP Integration" />
+              <LaptopMockup title="Accounting Pro Suite" screenshot="/project_accounting.png" />
               {/* Overlapping mobile mockup */}
               <div className="absolute bottom-4 right-8 w-[100px] z-20">
-                <MobileMockup title="Optima Mobile" />
+                <PhoneMockup title="Swaldo Mobile App" screenshot="/project_swadzo.png" />
               </div>
             </div>
 
             {/* Overview Detail */}
             <div className="lg:col-span-6">
               <span className="text-xs font-bold text-[#F97316] uppercase tracking-widest block mb-2">Featured Case Study</span>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-[#0F172A] mb-4">Optima Supply Chain Dashboard</h3>
+              <h3 className="text-2xl md:text-3xl font-extrabold text-[#0F172A] mb-4">Accounting Pro Suite</h3>
               
               <div className="space-y-4 font-semibold text-xs md:text-sm text-[#475569]">
                 <p>
-                  <strong>Business Problem:</strong> Legacy supply chain engines suffered from high databases query lag and stock tracking failure rates, wasting material.
+                  <strong>Business Problem:</strong> Legacy multi-currency billing and compliance reporting was manual, slow, and highly prone to accounting errors.
                 </p>
                 <p>
-                  <strong>Solution Provided:</strong> Sofzenix constructed a responsive microservices system powered by Java Spring Boot backend endpoints and React front-end consoles.
+                  <strong>Solution Provided:</strong> Developed an enterprise-grade accounting web application featuring automated tax calculation, multi-currency ledger management, and payroll processes.
                 </p>
                 <p>
-                  <strong>Results:</strong> Reduced stock estimation failures by 88% and raised operational outputs by 15% across global factories.
+                  <strong>Results:</strong> Saved $120k annually in accounting overhead, eliminated compliance reporting delays, and created a fully audit-ready system.
                 </p>
               </div>
 
               <div className="grid grid-cols-3 gap-4 border-t border-b border-gray-200/20 py-4 my-6 text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-500">
                 <div>
-                  <div className="text-[#0F172A] text-base md:text-lg mb-1">99.98%</div>
+                  <div className="text-[#0F172A] text-base md:text-lg mb-1">99.99%</div>
                   <div>Uptime Scale</div>
                 </div>
                 <div>
-                  <div className="text-[#0F172A] text-base md:text-lg mb-1">10 Months</div>
+                  <div className="text-[#0F172A] text-base md:text-lg mb-1">8 Months</div>
                   <div>Build Cycle</div>
                 </div>
                 <div>
-                  <div className="text-[#0F172A] text-base md:text-lg mb-1">8 Engineers</div>
+                  <div className="text-[#0F172A] text-base md:text-lg mb-1">6 Engineers</div>
                   <div>Team Size</div>
                 </div>
               </div>
@@ -773,35 +766,6 @@ const Portfolio = () => {
 
       {/* 10. CLIENT TESTIMONIALS (Carousel) */}
       <Testimonials />
-
-      {/* 11. CLIENT LOGO MARQUEE */}
-      <section className="py-16 bg-gray-100/[0.005] border-b border-gray-200/10 overflow-hidden select-none relative">
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
-
-        <div className="flex w-[200%] animate-marquee">
-          <div className="flex justify-around items-center min-w-full gap-8">
-            {marqueeClients.map((client, idx) => (
-              <span 
-                key={idx} 
-                className="text-xs md:text-sm font-black uppercase tracking-widest text-[#64748B] hover:text-[#0F172A] transition-colors cursor-default select-none px-6"
-              >
-                {client}
-              </span>
-            ))}
-          </div>
-          <div className="flex justify-around items-center min-w-full gap-8">
-            {marqueeClients.map((client, idx) => (
-              <span 
-                key={idx} 
-                className="text-xs md:text-sm font-black uppercase tracking-widest text-[#64748B] hover:text-[#0F172A] transition-colors cursor-default select-none px-6"
-              >
-                {client}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 12. WHY CHOOSE SOFZENIX */}
       <section className="py-24 px-6 md:px-8 relative border-b border-gray-200/20">

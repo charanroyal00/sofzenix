@@ -1,5 +1,5 @@
 import Hero from '../components/Hero';
-import PartnersSection from '../components/PartnersSection';
+import TrustedLeadersSection from '../components/TrustedLeadersSection';
 import ServicesSection from '../components/ServicesSection';
 import WhyChooseUs from '../components/WhyChooseUs';
 import TechStack from '../components/TechStack';
@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <PartnersSection />
+      <TrustedLeadersSection />
       <ServicesSection />
       <WhyChooseUs />
       <TechStack />
