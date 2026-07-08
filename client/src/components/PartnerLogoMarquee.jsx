@@ -13,35 +13,69 @@ export const partnersList = [
   {
     name: 'AICTE',
     cat: 'skills',
-    logo: null,
+    logo: () => (
+      <svg viewBox="0 0 120 120" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="58" fill="#1a3a6b" stroke="#f0a500" strokeWidth="3"/>
+        <text x="60" y="48" textAnchor="middle" fill="#f0a500" fontSize="22" fontWeight="bold" fontFamily="Arial">AICTE</text>
+        <text x="60" y="68" textAnchor="middle" fill="white" fontSize="8" fontFamily="Arial">ALL INDIA COUNCIL FOR</text>
+        <text x="60" y="80" textAnchor="middle" fill="white" fontSize="8" fontFamily="Arial">TECHNICAL EDUCATION</text>
+        <circle cx="60" cy="95" r="7" fill="#f0a500"/>
+        <text x="60" y="99" textAnchor="middle" fill="#1a3a6b" fontSize="9" fontWeight="bold" fontFamily="Arial">✓</text>
+      </svg>
+    ),
     desc: 'Officially recognized by AICTE as an approved internship provider, empowering students with free, quality tech internships.',
     url: 'https://aicte-india.org'
   },
   { 
     name: 'SkillStation', 
     cat: 'skills', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 200 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="8" width="34" height="34" rx="7" fill="#2563EB"/>
+        <text x="17" y="32" textAnchor="middle" fill="white" fontSize="20" fontWeight="900" fontFamily="Arial,sans-serif">S</text>
+        <text x="44" y="34" fill="#0F172A" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Skill</text>
+        <text x="94" y="34" fill="#2563EB" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Station</text>
+      </svg>
+    ),
     desc: 'Joint professional lab frameworks, vocational training, and placement pipelines.', 
     url: '#' 
   },
   { 
     name: 'iBirds Services', 
     cat: 'business', 
-    logo: 'https://www.ibirdsservices.com/wp-content/uploads/2024/01/ibirds-logo1-852x1024-1-1.png', 
+    logo: () => (
+      <svg viewBox="0 0 180 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="25" r="18" fill="#0EA5E9"/>
+        <text x="22" y="32" textAnchor="middle" fill="white" fontSize="18" fontWeight="900" fontFamily="Arial,sans-serif">iB</text>
+        <text x="48" y="32" fill="#0F172A" fontSize="16" fontWeight="700" fontFamily="Arial,sans-serif">iBirds</text>
+        <text x="112" y="32" fill="#64748B" fontSize="16" fontWeight="600" fontFamily="Arial,sans-serif">Services</text>
+      </svg>
+    ),
     desc: 'Optimizing customer experience workflows and Salesforce cloud development.', 
     url: 'https://www.ibirdsservices.com' 
   },
   { 
     name: 'BensxDigi Marketing Pvt. Ltd.', 
     cat: 'business', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 180 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="28" height="28" rx="6" fill="#F97316"/>
+        <text x="14" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">Bx</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">BensxDigi</text>
+      </svg>
+    ),
     desc: 'Enterprise marketing automation, lead aggregation, and brand placement.', 
     url: '#' 
   },
   { 
     name: 'Razorpay', 
     cat: 'finance', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg', 
+    logo: () => (
+      <svg viewBox="0 0 160 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15 L8 22 L18 15 L14 32 L20 32 L28 10" fill="#3395FF"/>
+        <text x="38" y="30" fill="#0F172A" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Razorpay</text>
+      </svg>
+    ),
     desc: 'Powering seamless checkout gateways and client payment flows.', 
     url: 'https://razorpay.com' 
   },
@@ -55,112 +89,216 @@ export const partnersList = [
   { 
     name: 'SB-S3 Hirewise Solutions', 
     cat: 'business', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 180 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="44" height="28" rx="6" fill="#1E40AF"/>
+        <text x="22" y="25" textAnchor="middle" fill="white" fontSize="11" fontWeight="800" fontFamily="Arial,sans-serif">SB-S3</text>
+        <text x="52" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Hirewise</text>
+      </svg>
+    ),
     desc: 'Strategic recruitment services and high-scale talent placement networks.', 
     url: '#' 
   },
   { 
     name: 'Maranatha Innovations', 
     cat: 'tech', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 200 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="20" r="14" fill="#7C3AED"/>
+        <text x="16" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">M</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Maranatha</text>
+        <text x="116" y="27" fill="#7C3AED" fontSize="13" fontWeight="600" fontFamily="Arial,sans-serif">Innovations</text>
+      </svg>
+    ),
     desc: 'Delivering smart business analytics engines and cloud products.', 
     url: '#' 
   },
   { 
     name: 'Modern Tek', 
     cat: 'tech', 
-    logo: 'https://catalog.wlimg.com/1/11319636/other-images/12577-comp-image.png', 
+    logo: () => (
+      <svg viewBox="0 0 180 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="8" width="34" height="34" rx="7" fill="#7C3AED"/>
+        <text x="17" y="32" textAnchor="middle" fill="white" fontSize="18" fontWeight="900" fontFamily="Arial,sans-serif">M</text>
+        <text x="42" y="32" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Modern</text>
+        <text x="120" y="32" fill="#7C3AED" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Tek</text>
+      </svg>
+    ),
     desc: 'Pioneering bespoke microservices integrations and data pipelines.', 
     url: 'https://www.modern-tek.co.in' 
   },
   { 
     name: 'Unlox', 
     cat: 'tech', 
-    logo: 'https://unlox.com/_next/static/media/Logo.60437b6e.png', 
+    logo: () => (
+      <svg viewBox="0 0 140 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="12" width="28" height="16" rx="4" fill="none" stroke="#F97316" strokeWidth="3"/>
+        <rect x="8" y="24" width="12" height="16" rx="2" fill="#F97316"/>
+        <text x="38" y="32" fill="#0F172A" fontSize="20" fontWeight="700" fontFamily="Arial,sans-serif">Unlox</text>
+      </svg>
+    ),
     desc: 'Providing unified data access control keys and authorization gates.', 
     url: 'https://unlox.com' 
   },
   { 
     name: 'Vetrix', 
     cat: 'tech', 
-    logo: 'https://vetrixdigital.com/wp-content/uploads/2025/06/Vetrix-Logo-Color-Web-min.png', 
+    logo: () => (
+      <svg viewBox="0 0 150 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="15,10 25,35 5,35" fill="#2563EB"/>
+        <polygon points="25,10 35,35 15,35" fill="#0EA5E9" opacity="0.7"/>
+        <text x="42" y="32" fill="#0F172A" fontSize="20" fontWeight="700" fontFamily="Arial,sans-serif">Vetrix</text>
+      </svg>
+    ),
     desc: 'Advanced virtualization platforms and secure DevOps paradigms.', 
     url: 'https://vetrixdigital.com' 
   },
   { 
     name: 'Launched Global', 
     cat: 'business', 
-    logo: 'https://launchedglobal.in/logo.png', 
+    logo: () => (
+      <svg viewBox="0 0 200 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="25" r="16" fill="none" stroke="#F97316" strokeWidth="3"/>
+        <path d="M20 12 L20 38 M8 25 L32 25" stroke="#F97316" strokeWidth="2"/>
+        <circle cx="20" cy="25" r="5" fill="#F97316"/>
+        <text x="42" y="32" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Launched</text>
+        <text x="132" y="32" fill="#F97316" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Global</text>
+      </svg>
+    ),
     desc: 'Global market expansion strategies and startup incubation support.', 
     url: 'https://launchedglobal.in' 
   },
   { 
     name: 'ET Supercom', 
     cat: 'tech', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 160 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="38" height="28" rx="6" fill="#0EA5E9"/>
+        <text x="19" y="25" textAnchor="middle" fill="white" fontSize="12" fontWeight="800" fontFamily="Arial,sans-serif">ET</text>
+        <text x="46" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Supercom</text>
+      </svg>
+    ),
     desc: 'Engineering telecommunication networks and secure routing gateways.', 
     url: '#' 
   },
   { 
     name: 'Learn2Gain', 
     cat: 'skills', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 160 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="28" height="28" rx="6" fill="#16A34A"/>
+        <text x="14" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">L</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Learn</text>
+        <text x="81" y="27" fill="#16A34A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">2Gain</text>
+      </svg>
+    ),
     desc: 'E-learning portals delivering containerized sandbox developer courses.', 
     url: '#' 
   },
   { 
     name: 'Learnstract', 
     cat: 'skills', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 160 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="28" height="28" rx="6" fill="#0F172A"/>
+        <text x="14" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">L</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Learn</text>
+        <text x="82" y="27" fill="#F97316" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">stract</text>
+      </svg>
+    ),
     desc: 'Corporate skill development bootcamps and structural certifications.', 
     url: '#' 
   },
   { 
     name: 'SkillOrbit', 
     cat: 'skills', 
-    logo: 'https://skillorbit.com/assets/img/logo/sko-logo-v2-blue.png', 
+    logo: () => (
+      <svg viewBox="0 0 180 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="25" r="14" fill="none" stroke="#2563EB" strokeWidth="2.5"/>
+        <circle cx="20" cy="25" r="3" fill="#2563EB"/>
+        <ellipse cx="20" cy="25" rx="22" ry="8" fill="none" stroke="#2563EB" strokeWidth="1.5"/>
+        <text x="44" y="32" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Skill</text>
+        <text x="92" y="32" fill="#2563EB" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Orbit</text>
+      </svg>
+    ),
     desc: 'Competency management systems and custom learning pathways.', 
     url: 'https://skillorbit.com' 
   },
   { 
     name: 'DigiLocker', 
     cat: 'infra', 
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/DigiLocker.svg', 
+    logo: () => (
+      <svg viewBox="0 0 200 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="5" width="40" height="40" rx="8" fill="#FF6B35"/>
+        <path d="M20 15 L20 35 M13 22 L27 22 M13 28 L27 28" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+        <text x="50" y="34" fill="#0F172A" fontSize="20" fontWeight="700" fontFamily="Arial,sans-serif">DigiLocker</text>
+      </svg>
+    ),
     desc: 'National digital documentation vault APIs for safe credential storage.', 
     url: 'https://digilocker.gov.in' 
   },
   { 
     name: 'Apex Skill Technologies', 
     cat: 'skills', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 220 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,8 32,38 8,38" fill="#F97316"/>
+        <text x="42" y="34" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Apex</text>
+        <text x="92" y="34" fill="#F97316" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Skill</text>
+        <text x="140" y="34" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Tech</text>
+      </svg>
+    ),
     desc: 'Engineering assessment portals and coding skill verification tools.', 
     url: 'https://apexskilltech.com' 
   },
   { 
     name: 'Zennise Digitech', 
     cat: 'tech', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 170 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="28" height="28" rx="14" fill="#6366F1"/>
+        <text x="14" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">Z</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Zennise</text>
+        <text x="100" y="27" fill="#6366F1" fontSize="13" fontWeight="600" fontFamily="Arial,sans-serif">Digitech</text>
+      </svg>
+    ),
     desc: 'Mastering IoT sensor ecosystems and real-time dashboard telemetry.', 
     url: '#' 
   },
   { 
     name: 'HostingRaja', 
     cat: 'infra', 
-    logo: 'https://image.hostingraja.in/images/logo/mobile-menu-logo.webp', 
+    logo: () => (
+      <svg viewBox="0 0 200 50" className="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="8" width="34" height="34" rx="7" fill="#16A34A"/>
+        <rect x="8" y="16" width="18" height="3" rx="1.5" fill="white"/>
+        <rect x="8" y="22" width="18" height="3" rx="1.5" fill="white"/>
+        <rect x="8" y="28" width="18" height="3" rx="1.5" fill="white"/>
+        <text x="42" y="32" fill="#0F172A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Hosting</text>
+        <text x="126" y="32" fill="#16A34A" fontSize="17" fontWeight="700" fontFamily="Arial,sans-serif">Raja</text>
+      </svg>
+    ),
     desc: 'High-performance cloud servers, managed hosting, and SSD nodes.', 
     url: 'https://hostingraja.in' 
   },
   { 
     name: 'Vedxlence Innovation', 
     cat: 'business', 
-    logo: null, 
+    logo: () => (
+      <svg viewBox="0 0 200 40" className="h-8 w-auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="6" width="28" height="28" rx="6" fill="#0F172A"/>
+        <text x="14" y="25" textAnchor="middle" fill="#F97316" fontSize="13" fontWeight="800" fontFamily="Arial,sans-serif">V</text>
+        <text x="36" y="27" fill="#0F172A" fontSize="13" fontWeight="700" fontFamily="Arial,sans-serif">Vedxlence</text>
+        <text x="122" y="27" fill="#2563EB" fontSize="13" fontWeight="600" fontFamily="Arial,sans-serif">Innovation</text>
+      </svg>
+    ),
     desc: 'Business strategy consulting and operational governance modeling.', 
     url: '#' 
   }
 ];
 
-// Curated subset of partners to display in the marquee (filtering to items that look like corporate brands)
-const marqueeItems = partnersList.filter(p => p.logo !== null || p.name === 'AICTE' || p.name === 'SkillStation');
+// All partners now have logos — show all in the marquee
+const marqueeItems = partnersList;
 
 const PartnerLogoMarquee = ({ isFullColor = false }) => {
   const gapClass = isFullColor 
@@ -208,11 +346,20 @@ const PartnerLogoMarquee = ({ isFullColor = false }) => {
               {typeof partner.logo === 'function' ? (
                 <div className="scale-[1.15] md:scale-[1.40] origin-center flex items-center justify-center"><partner.logo /></div>
               ) : partner.logo ? (
-                <img 
-                  src={partner.logo} 
-                  alt={`${partner.name} Logo`} 
-                  className={`h-full w-auto object-contain select-none ${isFullColor ? "max-h-[34px] md:max-h-[46px]" : "max-h-[22px] md:max-h-[30px]"}`} 
-                />
+                <>
+                  <img 
+                    src={partner.logo} 
+                    onError={(e) => { 
+                      e.target.onerror = null; 
+                      e.target.style.display = 'none'; 
+                      const fallback = e.target.nextElementSibling;
+                      if (fallback) fallback.style.display = 'block';
+                    }}
+                    alt={`${partner.name} Logo`} 
+                    className={`h-full w-auto object-contain select-none ${isFullColor ? "max-h-[34px] md:max-h-[46px]" : "max-h-[22px] md:max-h-[30px]"}`} 
+                  />
+                  <span className="hidden text-xs md:text-sm font-black uppercase tracking-widest text-[#2563EB] text-center">{partner.name}</span>
+                </>
               ) : (
                 <span className="text-xs md:text-sm font-black uppercase tracking-widest text-[#2563EB]">{partner.name}</span>
               )}
@@ -233,11 +380,20 @@ const PartnerLogoMarquee = ({ isFullColor = false }) => {
               {typeof partner.logo === 'function' ? (
                 <div className="scale-[1.15] md:scale-[1.40] origin-center flex items-center justify-center"><partner.logo /></div>
               ) : partner.logo ? (
-                <img 
-                  src={partner.logo} 
-                  alt={`${partner.name} Logo`} 
-                  className={`h-full w-auto object-contain select-none ${isFullColor ? "max-h-[34px] md:max-h-[46px]" : "max-h-[22px] md:max-h-[30px]"}`} 
-                />
+                <>
+                  <img 
+                    src={partner.logo} 
+                    onError={(e) => { 
+                      e.target.onerror = null; 
+                      e.target.style.display = 'none'; 
+                      const fallback = e.target.nextElementSibling;
+                      if (fallback) fallback.style.display = 'block';
+                    }}
+                    alt={`${partner.name} Logo`} 
+                    className={`h-full w-auto object-contain select-none ${isFullColor ? "max-h-[34px] md:max-h-[46px]" : "max-h-[22px] md:max-h-[30px]"}`} 
+                  />
+                  <span className="hidden text-xs md:text-sm font-black uppercase tracking-widest text-[#2563EB] text-center">{partner.name}</span>
+                </>
               ) : (
                 <span className="text-xs md:text-sm font-black uppercase tracking-widest text-[#2563EB]">{partner.name}</span>
               )}

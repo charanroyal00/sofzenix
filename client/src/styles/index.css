@@ -83,7 +83,8 @@
 }
 
 /* Ensure all page sections and wrappers let the Light Glassy Blue Aurora Mesh shine through! */
-.bg-\[\#F8FAFC\], .bg-slate-50, .bg-slate-100 {
+/* Removed bg-[#F8FAFC] override — it was breaking laptop mockup screen backgrounds */
+.bg-slate-50, .bg-slate-100 {
   background-color: transparent !important;
 }
 

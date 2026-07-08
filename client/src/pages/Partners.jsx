@@ -306,9 +306,12 @@ const Partners = () => {
                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                   className="text-center"
                 >
-                  <div className="px-6 py-3 bg-[#F3F8FF] border border-[#2563EB]/10 rounded-xl select-none">
-                    <span className="text-lg font-black uppercase tracking-widest text-[#2563EB]">SKILLSTATION</span>
-                  </div>
+                  <svg viewBox="0 0 200 50" className="h-16 w-auto mx-auto" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0" y="8" width="34" height="34" rx="7" fill="#2563EB"/>
+                    <text x="17" y="32" textAnchor="middle" fill="white" fontSize="20" fontWeight="900" fontFamily="Arial,sans-serif">S</text>
+                    <text x="44" y="34" fill="#0F172A" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Skill</text>
+                    <text x="94" y="34" fill="#2563EB" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Station</text>
+                  </svg>
                   <div className="mt-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">SkillStation Learning Unit</div>
                 </motion.div>
               </div>
@@ -413,6 +416,7 @@ const Partners = () => {
                           ) : partner.logo ? (
                             <img 
                               src={partner.logo} 
+                              onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
                               alt={`${partner.name} logo`} 
                               className="h-full w-auto object-contain max-w-full select-none"
                             />

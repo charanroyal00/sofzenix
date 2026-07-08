@@ -5,8 +5,6 @@ import { HiMenu, HiX } from 'react-icons/hi';
 import { FaArrowRight, FaLinkedin, FaTwitter, FaGithub, FaInstagram, FaFacebook } from 'react-icons/fa';
 import Logo from '../components/Logo';
 
-const MotionLink = motion(Link);
-
 const navContainerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -21,16 +19,6 @@ const navContainerVariants = {
 const navItemVariants = {
   hidden: { y: -10, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: 'easeOut' } }
-};
-
-const loginBtnVariants = {
-  hidden: { x: 30, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.5, ease: 'easeOut', delay: 0.15 } }
-};
-
-const consultationBtnVariants = {
-  hidden: { x: 50, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.5, ease: 'easeOut', delay: 0.2 } }
 };
 
 const Header = () => {
@@ -161,34 +149,24 @@ const Header = () => {
             ))}
           </motion.nav>
 
-          {/* Right group: Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-2.5">
-            <MotionLink
+          {/* Right group: Desktop Actions — static position, no slide animations */}
+          <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
+            <Link
               to="/about#verify-credentials"
               onClick={handleVerifyClick}
-              variants={loginBtnVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.03, boxShadow: "0 0 18px rgba(37, 99, 235, 0.2)" }}
-              whileTap={{ scale: 0.97 }}
-              className="relative p-[1.5px] rounded-full bg-gradient-to-r from-[#2563EB]/25 to-[#F97316]/25 hover:from-[#2563EB] hover:to-[#F97316] transition-all duration-300 shadow-sm cursor-pointer flex items-center justify-center select-none group"
+              className="relative p-[1.5px] rounded-full bg-gradient-to-r from-[#2563EB]/25 to-[#F97316]/25 hover:from-[#2563EB] hover:to-[#F97316] transition-all duration-300 shadow-sm cursor-pointer flex items-center justify-center select-none group hover:scale-[1.03] hover:shadow-[0_0_18px_rgba(37,99,235,0.2)] active:scale-[0.97]"
             >
-              <span className="px-4 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11.5px] font-bold text-[#0F172A] group-hover:bg-transparent group-hover:text-white transition-all duration-300">
+              <span className="px-4 py-1 rounded-full bg-white/90 backdrop-blur-md text-[11.5px] font-bold text-[#0F172A] group-hover:bg-transparent group-hover:text-white transition-all duration-300 whitespace-nowrap">
                 Verify
               </span>
-            </MotionLink>
-            
-            <MotionLink
+            </Link>
+
+            <Link
               to="/login"
-              variants={consultationBtnVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(37, 99, 235, 0.35)" }}
-              whileTap={{ scale: 0.97 }}
-              className="group px-4 py-1.5 rounded-full text-[11.5px] font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] hover:from-[#F97316] hover:to-[#2563EB] flex items-center justify-center gap-1 select-none transition-all duration-300 shadow-sm cursor-pointer"
+              className="px-4 py-1.5 rounded-full text-[11.5px] font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] hover:from-[#F97316] hover:to-[#2563EB] flex items-center justify-center select-none transition-all duration-300 shadow-sm cursor-pointer hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(37,99,235,0.35)] active:scale-[0.97] whitespace-nowrap"
             >
-              <span>Login</span>
-            </MotionLink>
+              Login
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle Button */}

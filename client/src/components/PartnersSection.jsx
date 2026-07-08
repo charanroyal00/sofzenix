@@ -105,7 +105,7 @@ const PartnersSection = () => {
                     {IconComponent ? (
                       <IconComponent className="text-3xl" />
                     ) : item.logo ? (
-                      <img src={item.logo} alt={item.name} className="max-h-8 max-w-[80%] object-contain" />
+                      <img src={item.logo} onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} alt={item.name} className="max-h-8 max-w-[80%] object-contain" />
                     ) : (
                       <span className="text-[10px] font-black uppercase text-[#2563EB] text-center px-1 truncate">
                         {item.textLogo}

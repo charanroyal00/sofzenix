@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 const PremiumHeroBackground = ({ mouseX, mouseY }) => {
   const canvasRef = useRef(null);
@@ -30,285 +31,235 @@ const PremiumHeroBackground = ({ mouseX, mouseY }) => {
 
     const isMobile = width < 768;
     const isTablet = width >= 768 && width < 1024;
-    
-    // High-density grid matching the fine detail of the reference image
-    const meshCols = isMobile ? 30 : isTablet ? 42 : 58;
-    const meshRows = isMobile ? 20 : isTablet ? 28 : 38;
-    const particleCount = isMobile ? 50 : isTablet ? 65 : 80;
 
-    // Background floating depth particles
-    const particles = Array.from({ length: particleCount }, () => {
-      const pZ = 50 + Math.random() * 450;
-      return {
-        x3d: (Math.random() - 0.5) * width * 1.5,
-        y3d: (Math.random() - 0.5) * height * 1.3,
-        z3d: pZ,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: (Math.random() - 0.5) * 0.12,
-        vz: (Math.random() - 0.5) * 0.06,
-        color: Math.random() > 0.5 ? 'rgba(37, 99, 235, 0.4)' : 'rgba(249, 115, 22, 0.4)',
-        alpha: 0.15 + Math.random() * 0.35,
-        fadeSpeed: 0.002 + Math.random() * 0.006,
-        fadeDir: Math.random() > 0.5 ? 1 : -1,
-      };
-    });
+    // Dense grid for fine mesh detail like the reference image
+    const meshCols = isMobile ? 32 : isTablet ? 48 : 64;
+    const meshRows = isMobile ? 22 : isTablet ? 32 : 42;
 
     let time = 0;
     let parallaxX = 0;
     let parallaxY = 0;
 
     let isTabActive = true;
-    const handleVisibilityChange = () => {
-      isTabActive = !document.hidden;
-    };
+    const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
+
 
     // ─── RENDER LOOP ───
     const render = () => {
-      if (!isTabActive) {
-        rafId = requestAnimationFrame(render);
-        return;
-      }
+      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
 
-      time += reducedMotion ? 0.0004 : 0.0028;
+      time += reducedMotion ? 0.0003 : 0.003;
       ctx.clearRect(0, 0, width, height);
 
-      // Smooth mouse parallax interpolation (with safety checks for motion value loading)
-      const targetParallaxX = mouseX && typeof mouseX.get === 'function' ? (mouseX.get() / (width || 1)) * 10 : 0;
-      const targetParallaxY = mouseY && typeof mouseY.get === 'function' ? (mouseY.get() / (height || 1)) * 10 : 0;
-      parallaxX += (targetParallaxX - parallaxX) * 0.08;
-      parallaxY += (targetParallaxY - parallaxY) * 0.08;
+      // Smooth mouse parallax
+      const targetParallaxX = mouseX && typeof mouseX.get === 'function' ? (mouseX.get() / (width || 1)) * 12 : 0;
+      const targetParallaxY = mouseY && typeof mouseY.get === 'function' ? (mouseY.get() / (height || 1)) * 12 : 0;
+      parallaxX += (targetParallaxX - parallaxX) * 0.07;
+      parallaxY += (targetParallaxY - parallaxY) * 0.07;
 
-      // ─── LAYER 1: Base Background Color ───
-      ctx.fillStyle = '#FAFBFF';
+      // ── LAYER 1: Pure white base ──
+      ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, width, height);
 
-      // ─── LAYER 2 & 3: Large Blurred Glows ───
+      // ── LAYER 2: Subtle light-blue tint in center-top area ──
+      const topGrad = ctx.createLinearGradient(0, 0, 0, height * 0.5);
+      topGrad.addColorStop(0, 'rgba(224, 234, 255, 0.55)');
+      topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = topGrad;
+      ctx.fillRect(0, 0, width, height * 0.5);
+
+      // ── LAYER 3: Large ambient glows (blue left, orange right) ──
       const drawGlow = (gx, gy, radius, color) => {
-        const glowGrad = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius);
-        glowGrad.addColorStop(0, color);
-        glowGrad.addColorStop(1, 'rgba(250, 251, 255, 0)');
-        ctx.fillStyle = glowGrad;
+        const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius);
+        g.addColorStop(0, color);
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(gx, gy, radius, 0, Math.PI * 2);
         ctx.fill();
       };
 
-      // Breathing radial glows for soft ambient lighting
-      const leftGlowRad = 550 + Math.sin(time * 0.4) * 45;
-      const rightGlowRad = 550 + Math.cos(time * 0.35) * 50;
+      const breathe = Math.sin(time * 0.5) * 40;
+      // Blue glow — bottom-left
+      drawGlow(
+        width * 0.05 + parallaxX,
+        height * 0.82 + parallaxY,
+        520 + breathe,
+        'rgba(37, 99, 235, 0.28)'
+      );
+      // Lighter blue mid-left
+      drawGlow(
+        width * 0.12 + parallaxX,
+        height * 0.65 + parallaxY,
+        340,
+        'rgba(99, 143, 255, 0.18)'
+      );
+      // Orange glow — bottom-right
+      drawGlow(
+        width * 0.95 + parallaxX,
+        height * 0.82 + parallaxY,
+        520 + breathe,
+        'rgba(249, 115, 22, 0.28)'
+      );
+      // Peach mid-right
+      drawGlow(
+        width * 0.88 + parallaxX,
+        height * 0.65 + parallaxY,
+        340,
+        'rgba(251, 170, 100, 0.18)'
+      );
 
-      // Layer 2: Soft Blue glow from bottom-left (Color: #2563EB, 20% Opacity)
-      drawGlow(width * 0.08 + parallaxX * 1.5, height * 0.88 + parallaxY * 1.5, leftGlowRad, 'rgba(37, 99, 235, 0.20)');
 
-      // Layer 3: Soft Orange glow from bottom-right (Color: #F97316, 20% Opacity)
-      drawGlow(width * 0.92 + parallaxX * 1.5, height * 0.88 + parallaxY * 1.5, rightGlowRad, 'rgba(249, 115, 22, 0.20)');
+      // ── LAYER 4: 3D wave mesh ──
+      const fov = 700;
+      const camDist = 380;
 
-      // ─── LAYER 4: Two overlapping High-Density 3D Wireframe Waves with Solid Shading ───
-      const fov = 720;
-      const cameraDistance = 390;
-
-      const draw3DShadedMesh = (isForeground) => {
-        const offsetY = isForeground ? height * 0.68 : height * 0.58;
-        const offsetZ = isForeground ? 20 : 110;
-        const maxAlphaMultiplier = isForeground ? 0.65 : 0.40; // Increased opacity for high visibility
-
-        const tiltX = isForeground ? -0.58 : -0.55;
+      const drawWaveMesh = (isFg) => {
+        // Foreground wave: larger, more visible; background: slightly behind
+        const baseY   = isFg ? height * 0.70 : height * 0.60;
+        const offsetZ = isFg ? 0 : 90;
+        const maxA    = isFg ? 0.82 : 0.52;
+        const tiltX   = isFg ? -0.60 : -0.56;
         const cosX = Math.cos(tiltX);
         const sinX = Math.sin(tiltX);
 
-        const gridPoints = [];
+        const xSpan = width  * (isFg ? 1.85 : 2.1);
+        const ySpan = height * (isFg ? 1.15 : 1.35);
+        const colSp = xSpan / meshCols;
+        const rowSp = ySpan / meshRows;
 
-        // Grid sizing
-        const xSpan = width * (isForeground ? 1.7 : 1.9);
-        const ySpan = height * (isForeground ? 1.05 : 1.25);
-        const colSpacing = xSpan / meshCols;
-        const rowSpacing = ySpan / meshRows;
-
-        // Generate coordinates
+        const pts = [];
         for (let r = 0; r <= meshRows; r++) {
-          const rowPoints = [];
-          const progressY = r / meshRows;
-          const localY = (r - meshRows / 2) * rowSpacing;
-
+          const row = [];
+          const pY  = r / meshRows;
+          const lY  = (r - meshRows / 2) * rowSp;
           for (let c = 0; c <= meshCols; c++) {
-            const progressX = c / meshCols;
-            const localX = (c - meshCols / 2) * colSpacing;
+            const pX = c / meshCols;
+            const lX = (c - meshCols / 2) * colSp;
 
-            // Mountainous height envelope shaping valley in the center
-            const distFromCenter = Math.abs(progressX - 0.5) * 2;
-            const peakHeight = Math.pow(distFromCenter, 1.75) * (isForeground ? 140 : 120);
+            // Side peaks with flat center valley (matches reference)
+            const dist  = Math.abs(pX - 0.5) * 2;
+            const peak  = Math.pow(dist, 1.6) * (isFg ? 160 : 135);
 
-            // Wave motion
-            const waveX = progressX * 4.8 - time * 0.45;
-            const waveY = progressY * 3.2 + (isForeground ? time * 0.55 : -time * 0.55);
-            const ripple = Math.sin(waveX) * Math.cos(waveY) * (isForeground ? 24 : 18)
-                         + Math.sin(progressX * 14 + time * 1.5) * 5;
+            // Layered wave motion
+            const wX = pX * 5.5 - time * (isFg ? 0.50 : 0.38);
+            const wY = pY * 3.8 + (isFg ? time * 0.60 : -time * 0.50);
+            const ripple = Math.sin(wX) * Math.cos(wY) * (isFg ? 28 : 20)
+                         + Math.sin(pX * 16 + time * 1.8) * 6
+                         + Math.cos(pY * 10 + time * 1.2) * 4;
 
-            const localZ = peakHeight + ripple;
+            const lZ = peak + ripple;
+            const y1 = lY * cosX - lZ * sinX;
+            const z1 = lY * sinX + lZ * cosX;
 
-            // Rotate
-            const y1 = localY * cosX - localZ * sinX;
-            const z1 = localY * sinX + localZ * cosX;
+            const wXfinal = lX + parallaxX * (isFg ? 3.0 : 1.5);
+            const wYfinal = y1 + baseY + parallaxY * (isFg ? 3.0 : 1.5);
+            const wZfinal = z1 + offsetZ + camDist;
 
-            // Translate
-            const wX = localX + parallaxX * (isForeground ? 2.8 : 1.4);
-            const wY = y1 + offsetY + parallaxY * (isForeground ? 2.8 : 1.4);
-            const wZ = z1 + offsetZ + cameraDistance;
+            const sx = width / 2  + (wXfinal * fov) / wZfinal;
+            const sy = height / 2.2 + (wYfinal * fov) / wZfinal;
 
-            // Project
-            const screenX = width / 2 + (wX * fov) / wZ;
-            const screenY = height / 2.3 + (wY * fov) / wZ;
+            const depthFade = Math.max(0, 1 - (wZfinal - 80) / 900);
+            const edgeFade  = Math.sin(pX * Math.PI);
+            const alpha     = Math.pow(pY, 0.65) * edgeFade * depthFade * maxA;
 
-            // Opacity multipliers
-            const depthFade = Math.max(0, 1 - (wZ - 100) / 850);
-            const edgeFadeX = Math.sin(progressX * Math.PI); // Fades at extreme left/right edges
-            const alpha = Math.pow(progressY, 0.75) * edgeFadeX * depthFade * maxAlphaMultiplier;
-
-            rowPoints.push({ x: screenX, y: screenY, z: wZ, alpha });
+            row.push({ x: sx, y: sy, z: wZfinal, alpha, pX });
           }
-          gridPoints.push(rowPoints);
+          pts.push(row);
         }
 
-        // Draw polygon face shading (surface fills)
+
+        // ── Colored surface fills ──
         for (let r = 0; r < meshRows; r++) {
           for (let c = 0; c < meshCols; c++) {
-            const p1 = gridPoints[r][c];
-            const p2 = gridPoints[r][c + 1];
-            const p3 = gridPoints[r + 1][c + 1];
-            const p4 = gridPoints[r + 1][c];
+            const p1 = pts[r][c], p2 = pts[r][c+1];
+            const p3 = pts[r+1][c+1], p4 = pts[r+1][c];
+            const avgA = (p1.alpha + p2.alpha + p3.alpha + p4.alpha) / 4;
+            if (avgA < 0.01) continue;
 
-            const avgAlpha = (p1.alpha + p2.alpha + p3.alpha + p4.alpha) / 4;
+            const midX = (p1.x + p2.x + p3.x + p4.x) / 4;
+            // Normalized 0→1 across screen width
+            const t = midX / width;
 
-            if (avgAlpha > 0.015) {
-              const segmentMidX = (p1.x + p2.x) / 2;
-              
-              // Blended color coordinates: Blue (#2563EB) left, Orange (#F97316) right, soft white center
-              const blueWeight = Math.max(0, 1 - segmentMidX / (width * 0.44));
-              const orangeWeight = Math.max(0, (segmentMidX - width * 0.56) / (width * 0.44));
-              const whiteWeight = 1 - blueWeight - orangeWeight;
-
-              // Shaded surface colors: richer blue/indigo and peach/orange tones
-              const red = Math.round(59 * blueWeight + 251 * orangeWeight + 248 * whiteWeight);
-              const green = Math.round(130 * blueWeight + 160 * orangeWeight + 250 * whiteWeight);
-              const blue = Math.round(246 * blueWeight + 110 * orangeWeight + 255 * whiteWeight);
-
-              // Surface fill with opacity
-              ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${avgAlpha * 0.42})`;
-              ctx.beginPath();
-              ctx.moveTo(p1.x, p1.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.lineTo(p3.x, p3.y);
-              ctx.lineTo(p4.x, p4.y);
-              ctx.closePath();
-              ctx.fill();
+            // Blue side (#3B6FEE) → white center → Orange side (#F97316)
+            let r_, g_, b_;
+            if (t < 0.38) {
+              // Blue zone
+              const w = 1 - t / 0.38;
+              r_ = Math.round(59  + (255 - 59)  * (1 - w));
+              g_ = Math.round(111 + (255 - 111) * (1 - w));
+              b_ = Math.round(238 + (255 - 238) * (1 - w));
+            } else if (t > 0.62) {
+              // Orange zone
+              const w = (t - 0.62) / 0.38;
+              r_ = Math.round(255 - (255 - 249) * (1 - w));
+              g_ = Math.round(255 - (255 - 115) * w);
+              b_ = Math.round(255 - (255 - 22)  * w);
+            } else {
+              // Pure white center
+              r_ = 255; g_ = 255; b_ = 255;
             }
+
+            ctx.fillStyle = `rgba(${r_},${g_},${b_},${avgA * 0.55})`;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.lineTo(p4.x, p4.y);
+            ctx.closePath();
+            ctx.fill();
           }
         }
 
-        // Draw wireframe overlay lines and glowing nodes
-        ctx.strokeStyle = '#FFFFFF';
+        // ── White wireframe lines ──
         for (let r = 0; r <= meshRows; r++) {
           for (let c = 0; c <= meshCols; c++) {
-            const p = gridPoints[r][c];
+            const p = pts[r][c];
 
-            // Setup color parameters based on position for the wireframe lines and dots
-            const segmentMidX = p.x;
-            const blueWeight = Math.max(0, 1 - segmentMidX / (width * 0.44));
-            const orangeWeight = Math.max(0, (segmentMidX - width * 0.56) / (width * 0.44));
-            const whiteWeight = 1 - blueWeight - orangeWeight;
-
-            const red = Math.round(37 * blueWeight + 249 * orangeWeight + 255 * whiteWeight);
-            const green = Math.round(99 * blueWeight + 115 * orangeWeight + 255 * whiteWeight);
-            const blue = Math.round(235 * blueWeight + 22 * orangeWeight + 255 * whiteWeight);
-
-            // Draw horizontal line segment
             if (c < meshCols) {
-              const pNext = gridPoints[r][c + 1];
-              const lineAlpha = Math.min(p.alpha, pNext.alpha);
-
-              if (lineAlpha > 0.02) {
-                // Lines are white on top of colored surface with low opacity (Reference style)
-                ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha * 0.70})`;
-                ctx.lineWidth = 0.45 + (1 - p.z / (cameraDistance + 250)) * 0.45;
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(pNext.x, pNext.y);
-                ctx.stroke();
+              const pN = pts[r][c+1];
+              const la = Math.min(p.alpha, pN.alpha);
+              if (la > 0.015) {
+                ctx.strokeStyle = `rgba(255,255,255,${la * 0.78})`;
+                ctx.lineWidth = 0.5 + (1 - p.z / (camDist + 300)) * 0.5;
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pN.x, pN.y); ctx.stroke();
               }
             }
-
-            // Draw vertical line segment
             if (r < meshRows) {
-              const pBelow = gridPoints[r + 1][c];
-              const lineAlpha = Math.min(p.alpha, pBelow.alpha);
-
-              if (lineAlpha > 0.02) {
-                ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha * 0.70})`;
-                ctx.lineWidth = 0.45 + (1 - p.z / (cameraDistance + 250)) * 0.45;
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(pBelow.x, pBelow.y);
-                ctx.stroke();
+              const pB = pts[r+1][c];
+              const la = Math.min(p.alpha, pB.alpha);
+              if (la > 0.015) {
+                ctx.strokeStyle = `rgba(255,255,255,${la * 0.78})`;
+                ctx.lineWidth = 0.5 + (1 - p.z / (camDist + 300)) * 0.5;
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pB.x, pB.y); ctx.stroke();
               }
             }
 
-            // Draw bright glowing particle dots at each vertex
-            if (p.alpha > 0.03) {
-              const dotSize = (isForeground ? 1.1 : 0.8) + (1 - p.z / (cameraDistance + 250)) * 1.0;
-              
-              // Dots glow with the underlying local color (blue/indigo or orange/peach)
-              ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${p.alpha * 1.6})`;
+            // Vertex dots
+            if (p.alpha > 0.025) {
+              const t = p.pX;
+              let dr, dg, db;
+              if (t < 0.4) {
+                dr = 59; dg = 111; db = 238;
+              } else if (t > 0.6) {
+                dr = 249; dg = 115; db = 22;
+              } else {
+                dr = 200; dg = 210; db = 255;
+              }
+              const ds = (isFg ? 1.2 : 0.85) + (1 - p.z / (camDist + 300)) * 1.1;
+              ctx.fillStyle = `rgba(${dr},${dg},${db},${p.alpha * 1.8})`;
               ctx.beginPath();
-              ctx.arc(p.x, p.y, dotSize, 0, Math.PI * 2);
+              ctx.arc(p.x, p.y, ds, 0, Math.PI * 2);
               ctx.fill();
             }
           }
         }
-      };
+      }; // end drawWaveMesh
 
-      // Draw background ridge (fainter), then foreground ridge
-      draw3DShadedMesh(false);
-      draw3DShadedMesh(true);
-
-      // ─── FLOATING particles (60-80 dots in blue, orange, white) ───
-      particles.forEach((p) => {
-        if (!reducedMotion) {
-          p.x3d += p.vx;
-          p.y3d += p.vy;
-          p.z3d += p.vz;
-
-          p.alpha += p.fadeSpeed * p.fadeDir;
-          if (p.alpha > 0.7) { p.alpha = 0.7; p.fadeDir = -1; }
-          else if (p.alpha < 0.1) { p.alpha = 0.1; p.fadeDir = 1; }
-
-          if (p.x3d < -width) p.x3d = width;
-          if (p.x3d > width) p.x3d = -width;
-          if (p.y3d < -height) p.y3d = height;
-          if (p.y3d > height) p.y3d = -height;
-          if (p.z3d < 10) p.z3d = 500;
-          if (p.z3d > 500) p.z3d = 10;
-        }
-
-        const wX = p.x3d + parallaxX * 2.8;
-        const wY = p.y3d + parallaxY * 2.8;
-        const wZ = p.z3d + cameraDistance;
-
-        const screenX = width / 2 + (wX * fov) / wZ;
-        const screenY = height / 2 + (wY * fov) / wZ;
-
-        const size = Math.max(0.4, (1 - p.z3d / 500) * 2.5);
-        const depthAlpha = Math.max(0, 1 - p.z3d / 500) * p.alpha * 0.45;
-
-        if (screenX >= 0 && screenX <= width && screenY >= 0 && screenY <= height) {
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = depthAlpha;
-          ctx.beginPath();
-          ctx.arc(screenX, screenY, size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.globalAlpha = 1.0;
-        }
-      });
+      // Back wave first, then foreground
+      drawWaveMesh(false);
+      drawWaveMesh(true);
 
       rafId = requestAnimationFrame(render);
     };
@@ -327,7 +278,7 @@ const PremiumHeroBackground = ({ mouseX, mouseY }) => {
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
       </div>
-      <div className="absolute inset-0 w-full h-full z-[1] pointer-events-none bg-noise opacity-[0.015]" />
+      <div className="absolute inset-0 w-full h-full z-[1] pointer-events-none bg-noise opacity-[0.012]" />
     </>
   );
 };

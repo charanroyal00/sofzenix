@@ -116,32 +116,32 @@ const ProjectCard = ({ proj }) => {
         boxShadow: '0 20px 40px rgba(37, 99, 235, 0.12), 0 0 25px rgba(37, 99, 235, 0.06)'
       }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="group relative premium-card bg-white border border-gray-200/50 rounded-[24px] flex flex-col justify-between h-full overflow-hidden cursor-default transition-shadow duration-300 p-6"
+      className="group relative premium-card bg-white border border-gray-200/50 rounded-[20px] flex flex-col justify-between h-full overflow-hidden cursor-default transition-shadow duration-300 p-4"
     >
       <div>
         {/* Mockup Frame inside Card */}
-        <div className="mb-6 bg-[#F8FAFC] border border-gray-200/40 rounded-xl p-4 overflow-hidden flex items-center justify-center">
+        <div className="mb-4 bg-[#F8FAFC] border border-gray-200/40 rounded-xl p-3 overflow-hidden flex items-center justify-center">
           <LaptopMockup title={proj.title} screenshot={proj.screenshot} />
         </div>
 
-        <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-wider text-[#F97316]">
+        <div className="flex items-center justify-between mb-2 text-[9px] font-bold uppercase tracking-wider text-[#F97316]">
           <span>{proj.category}</span>
           <span>{proj.year}</span>
         </div>
 
-        <h3 className="text-base font-extrabold text-[#0F172A] mb-1.5 group-hover:text-[#2563EB] transition-colors leading-tight">
+        <h3 className="text-[13px] font-extrabold text-[#0F172A] mb-1 group-hover:text-[#2563EB] transition-colors leading-tight">
           {proj.title}
         </h3>
-        <p className="text-gray-500 text-[11px] font-medium leading-relaxed mb-6 line-clamp-3">
+        <p className="text-gray-500 text-[10px] font-medium leading-relaxed mb-4 line-clamp-3">
           {proj.description}
         </p>
 
         {/* Color Tech Badges */}
-        <div className="flex flex-wrap gap-1.5 pt-1 mb-6">
+        <div className="flex flex-wrap gap-1 pt-1 mb-4">
           {proj.tech.map((tag) => (
             <span 
               key={tag}
-              className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-tight border border-transparent shadow-sm hover:scale-105 hover:shadow-md transition-all select-none ${getTagStyle(tag)}`}
+              className={`px-2 py-0.5 rounded-full text-[8px] font-bold tracking-tight border border-transparent shadow-sm hover:scale-105 hover:shadow-md transition-all select-none ${getTagStyle(tag)}`}
             >
               {tag}
             </span>
@@ -150,19 +150,19 @@ const ProjectCard = ({ proj }) => {
       </div>
 
       {/* Card Actions Bottom Area */}
-      <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-auto w-full">
+      <div className="flex items-center gap-2 pt-3 border-t border-gray-100 mt-auto w-full">
         <Link 
           to="/portfolio"
-          className="premium-secondary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center transition-all duration-300"
+          className="premium-secondary-btn px-3 py-1.5 text-[10px] font-bold cursor-pointer w-full text-center transition-all duration-300"
         >
           View Details
         </Link>
         <Link 
           to={proj.primaryBtnLink}
-          className="premium-primary-btn px-4 py-2 text-xs font-bold cursor-pointer w-full text-center flex items-center justify-center gap-1.5 transition-all duration-300"
+          className="premium-primary-btn px-3 py-1.5 text-[10px] font-bold cursor-pointer w-full text-center flex items-center justify-center gap-1 transition-all duration-300"
         >
           <span>{proj.primaryBtnText}</span>
-          <FaArrowUpRightFromSquare className="text-[10px]" />
+          <FaArrowUpRightFromSquare className="text-[9px]" />
         </Link>
       </div>
     </motion.div>
@@ -214,13 +214,13 @@ const PortfolioPreview = () => {
           </motion.p>
         </div>
 
-        {/* Portfolio Staggered 3-Column Grid */}
+        {/* Portfolio 4-Column Grid — all four projects in one row */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 w-full"
         >
           {projects.map((proj) => (
             <ProjectCard key={proj.title} proj={proj} />

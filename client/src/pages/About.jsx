@@ -473,7 +473,7 @@ const EcosystemVisualization = () => {
     { icon: SiGithub, name: 'GitHub', color: '#181717' }
   ];
 
-  const radius = 160;
+  const radius = 128;
 
   return (
     <motion.div
@@ -481,7 +481,7 @@ const EcosystemVisualization = () => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1000 }}
-      className="w-full max-w-[530px] aspect-square bg-transparent relative flex items-center justify-center cursor-default group select-none"
+      className="w-full max-w-[420px] aspect-square bg-transparent relative flex items-center justify-center cursor-default group select-none"
     >
       {/* Floating particles inside the ecosystem card */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-45">
@@ -508,8 +508,8 @@ const EcosystemVisualization = () => {
       </div>
 
       {/* Rotating orbit ring paths */}
-      <div className="absolute w-[320px] h-[320px] rounded-full border border-[#2563EB]/10 pointer-events-none" />
-      <div className="absolute w-[220px] h-[220px] rounded-full border border-dashed border-[#F97316]/10 pointer-events-none" />
+      <div className="absolute w-[256px] h-[256px] rounded-full border border-[#2563EB]/10 pointer-events-none" />
+      <div className="absolute w-[176px] h-[176px] rounded-full border border-dashed border-[#F97316]/10 pointer-events-none" />
 
       {/* Animated Orbit Container */}
       <motion.div
@@ -519,17 +519,17 @@ const EcosystemVisualization = () => {
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* SVG connection lines rotating inside the orbit */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25 group-hover:opacity-40 transition-opacity duration-300" viewBox="0 0 530 530">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-25 group-hover:opacity-40 transition-opacity duration-300" viewBox="0 0 420 420">
           {techNodes.map((_, i) => {
             const angle = (i * 360) / techNodes.length;
             const rad = (angle * Math.PI) / 180;
-            const tx = 265 + Math.cos(rad) * radius;
-            const ty = 265 + Math.sin(rad) * radius;
+            const tx = 210 + Math.cos(rad) * radius;
+            const ty = 210 + Math.sin(rad) * radius;
             return (
               <motion.line
                 key={i}
-                x1="265"
-                y1="265"
+                x1="210"
+                y1="210"
                 x2={tx}
                 y2={ty}
                 stroke="#2563EB"
@@ -552,7 +552,7 @@ const EcosystemVisualization = () => {
           return (
             <motion.div
               key={node.name}
-              className="absolute w-14 h-14 rounded-full bg-white border border-gray-200/40 shadow-lg flex items-center justify-center cursor-pointer group/node"
+              className="absolute w-11 h-11 rounded-full bg-white border border-gray-200/40 shadow-lg flex items-center justify-center cursor-pointer group/node"
               style={{
                 x: tx,
                 y: ty,
@@ -586,13 +586,13 @@ const EcosystemVisualization = () => {
       {/* Center Static Glowing Pulse Node */}
       <motion.div 
         style={{ transformStyle: 'preserve-3d', translateZ: 20 }}
-        className="w-28 h-28 rounded-full bg-[#2563EB]/10 border border-[#2563EB]/35 flex items-center justify-center shadow-lg relative z-10 cursor-pointer"
+        className="w-20 h-20 rounded-full bg-[#2563EB]/10 border border-[#2563EB]/35 flex items-center justify-center shadow-lg relative z-10 cursor-pointer"
       >
         <div className="absolute inset-0 rounded-full bg-[#2563EB]/5 animate-ping opacity-75" />
         <div className="absolute inset-1.5 rounded-full bg-gradient-to-tr from-[#2563EB] to-[#7C3AED] opacity-10 blur-[8px]" />
         
-        <div className="w-20 h-20 rounded-full bg-white border border-gray-100 shadow-md flex items-center justify-center relative z-20 group-hover:scale-105 transition-transform duration-300">
-          <FaBrain className="text-[#2563EB] text-4xl animate-pulse" />
+        <div className="w-14 h-14 rounded-full bg-white border border-gray-100 shadow-md flex items-center justify-center relative z-20 group-hover:scale-105 transition-transform duration-300">
+          <FaBrain className="text-[#2563EB] text-3xl animate-pulse" />
         </div>
       </motion.div>
     </motion.div>
@@ -693,7 +693,7 @@ const About = () => {
       {/* ==================================================
           1. HERO SECTION (Fade Up + Blur Staged)
           ================================================== */}
-      <section className="relative min-h-[85vh] flex items-center justify-center pt-32 pb-16 px-6 md:px-8 border-b border-gray-200/20">
+      <section className="relative min-h-[85vh] flex items-center justify-center pt-32 pb-16 px-6 md:px-8 border-b border-gray-200/20 overflow-hidden">
         <div className="max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           
           {/* Left Details */}
@@ -827,7 +827,7 @@ const About = () => {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.15 }}
-            className="lg:col-span-5 flex justify-center relative min-h-[300px] lg:-translate-y-12"
+            className="lg:col-span-5 flex justify-center items-center relative overflow-hidden"
           >
             <EcosystemVisualization />
           </motion.div>

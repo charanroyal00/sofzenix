@@ -21,73 +21,40 @@ import {
   FaCogs,
   FaRocket,
   FaSearch,
-  FaUserTie
+  FaUserTie,
+  FaAws,
+  FaJava
 } from 'react-icons/fa';
+import {
+  SiReact,
+  SiNodedotjs,
+  SiExpress,
+  SiMongodb,
+  SiSpringboot,
+  SiPython,
+  SiDocker,
+  SiFlutter,
+  SiFigma,
+  SiPytorch,
+  SiKubernetes
+} from 'react-icons/si';
 import ReCaptchaCheckbox from '../components/ReCaptchaCheckbox';
 import Testimonials from '../components/Testimonials';
 
-// --- SVGs for Technologies (guarantees perfect coloring & rendering) ---
+// --- Real brand icons mapped to each tech ---
 const TechLogos = {
-  React: () => (
-    <svg className="w-8 h-8 text-[#61DAFB]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.4-5.3l-1.9 1.1c-.2.1-.4 0-.5-.2l-.6-1c-.1-.2 0-.4.2-.5l1.9-1.1c.1-.1.1-.3 0-.4l-1.9-1.1c-.2-.1-.3-.3-.2-.5l.6-1c.1-.2.3-.3.5-.2l1.9 1.1c.2.1.4 0 .5-.2l1.1-1.9c.1-.2.3-.3.5-.2l1.1.6c.2.1.3.3.2.5l-1.1 1.9c-.1.2 0 .4.2.5l1.9 1.1c.2.1.3.3.2.5l-.6 1c-.1.2-.3.3-.5.2l-1.9-1.1c-.2-.1-.4 0-.5.2l-1.1 1.9c-.1.2-.3.3-.5.2l-1.1-.6c-.2-.1-.3-.3-.2-.5l1.1-1.9c.1-.2 0-.4-.2-.5z"/>
-    </svg>
-  ),
-  Nodejs: () => (
-    <svg className="w-8 h-8 text-[#68A063]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.5l-3.5-2v-4l3.5-2 3.5 2v4l-3.5 2z"/>
-    </svg>
-  ),
-  Expressjs: () => (
-    <svg className="w-8 h-8 text-[#0F172A]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2 13h-4v-2h4v2zm0-4h-4V9h4v2z"/>
-    </svg>
-  ),
-  MongoDB: () => (
-    <svg className="w-8 h-8 text-[#47A248]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-1 0-2.5-1.5-2.5-3.5S10.5 10 12 10s2.5 1.5 2.5 3.5-1.5 3.5-2.5 3.5z"/>
-    </svg>
-  ),
-  Java: () => (
-    <svg className="w-8 h-8 text-[#5382A1]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2.5 14c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm5 0c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5z"/>
-    </svg>
-  ),
-  SpringBoot: () => (
-    <svg className="w-8 h-8 text-[#6DB33F]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/>
-    </svg>
-  ),
-  Python: () => (
-    <svg className="w-8 h-8 text-[#3776AB]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.5 13.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5z"/>
-    </svg>
-  ),
-  AWS: () => (
-    <svg className="w-8 h-8 text-[#FF9900]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2 14h-4v-2h4v2zm0-4h-4V9h4v2z"/>
-    </svg>
-  ),
-  Docker: () => (
-    <svg className="w-8 h-8 text-[#2496ED]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 11h-9v-2h9v2z"/>
-    </svg>
-  ),
-  Flutter: () => (
-    <svg className="w-8 h-8 text-[#02569B]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15l-4-4 4-4 4 4-4 4z"/>
-    </svg>
-  ),
-  UIUX: () => (
-    <svg className="w-8 h-8 text-[#E25CFF]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z"/>
-    </svg>
-  ),
-  AIML: () => (
-    <svg className="w-8 h-8 text-[#FF8A00]" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z"/>
-    </svg>
-  )
+  React:      () => <SiReact      className="w-8 h-8" style={{ color: '#61DAFB' }} />,
+  Nodejs:     () => <SiNodedotjs  className="w-8 h-8" style={{ color: '#339933' }} />,
+  Expressjs:  () => <SiExpress    className="w-8 h-8" style={{ color: '#000000' }} />,
+  MongoDB:    () => <SiMongodb    className="w-8 h-8" style={{ color: '#47A248' }} />,
+  Java:       () => <FaJava       className="w-8 h-8" style={{ color: '#E76F00' }} />,
+  SpringBoot: () => <SiSpringboot className="w-8 h-8" style={{ color: '#6DB33F' }} />,
+  Python:     () => <SiPython     className="w-8 h-8" style={{ color: '#3776AB' }} />,
+  AWS:        () => <FaAws        className="w-8 h-8" style={{ color: '#FF9900' }} />,
+  Docker:     () => <SiDocker     className="w-8 h-8" style={{ color: '#2496ED' }} />,
+  Flutter:    () => <SiFlutter    className="w-8 h-8" style={{ color: '#02569B' }} />,
+  UIUX:       () => <SiFigma      className="w-8 h-8" style={{ color: '#F24E1E' }} />,
+  AIML:       () => <SiPytorch    className="w-8 h-8" style={{ color: '#EE4C2C' }} />,
 };
 
 const Hire = () => {
@@ -441,7 +408,7 @@ const Hire = () => {
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-[#F8FAFC] flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: tech.bg }}>
                       <LogoSvg />
                     </div>
                     <span className="text-[10px] font-bold text-gray-500 bg-[#2563EB]/5 border border-[#2563EB]/10 px-2.5 py-1 rounded-full uppercase tracking-wider">
@@ -1001,18 +968,18 @@ const hiringModelsData = [
 ];
 
 const techStackData = [
-  { name: 'React', exp: '7+ Years', desc: 'Single-page web applications, Next.js frameworks, and reusable design systems.', logoKey: 'React' },
-  { name: 'Node.js', exp: '6+ Years', desc: 'High-throughput APIs, web sockets, event-driven engines, and microservices.', logoKey: 'Nodejs' },
-  { name: 'Express.js', exp: '6+ Years', desc: 'Lightweight REST routing, route protection middlewares, and server controllers.', logoKey: 'Expressjs' },
-  { name: 'MongoDB', exp: '6+ Years', desc: 'Flexible NoSQL document schemas, aggregation pipelines, and clustered databases.', logoKey: 'MongoDB' },
-  { name: 'Java', exp: '8+ Years', desc: 'Multi-threaded enterprise banking architectures, secure microservices, and design patterns.', logoKey: 'Java' },
-  { name: 'Spring Boot', exp: '7+ Years', desc: 'Cloud-native service registries, Spring Cloud configs, JPA layers, and OAuth2 security.', logoKey: 'SpringBoot' },
-  { name: 'Python', exp: '7+ Years', desc: 'FastAPI servers, data engineering scripts, automation pipelines, and custom scrapers.', logoKey: 'Python' },
-  { name: 'AWS', exp: '6+ Years', desc: 'ECS clusters, serverless Lambdas, secure VPC networking, and cloud IAM setups.', logoKey: 'AWS' },
-  { name: 'Docker', exp: '5+ Years', desc: 'Repeatable application containerization, multi-stage builds, and Kubernetes orchestration.', logoKey: 'Docker' },
-  { name: 'Flutter', exp: '4+ Years', desc: 'Native compiled Android and iOS mobile applications from a single codebase.', logoKey: 'Flutter' },
-  { name: 'UI/UX Design', exp: '6+ Years', desc: 'Wireframing, Figma design libraries, client branding, and interactive prototypes.', logoKey: 'UIUX' },
-  { name: 'AI & Machine Learning', exp: '5+ Years', desc: 'LLM integration, automated agent workflows, PyTorch models, and RAG architectures.', logoKey: 'AIML' }
+  { name: 'React',              exp: '7+ Years', desc: 'Single-page web applications, Next.js frameworks, and reusable design systems.',                           logoKey: 'React',      bg: 'rgba(97,218,251,0.12)'  },
+  { name: 'Node.js',            exp: '6+ Years', desc: 'High-throughput APIs, web sockets, event-driven engines, and microservices.',                              logoKey: 'Nodejs',     bg: 'rgba(51,153,51,0.12)'   },
+  { name: 'Express.js',         exp: '6+ Years', desc: 'Lightweight REST routing, route protection middlewares, and server controllers.',                          logoKey: 'Expressjs',  bg: 'rgba(0,0,0,0.06)'       },
+  { name: 'MongoDB',            exp: '6+ Years', desc: 'Flexible NoSQL document schemas, aggregation pipelines, and clustered databases.',                         logoKey: 'MongoDB',    bg: 'rgba(71,162,72,0.12)'   },
+  { name: 'Java',               exp: '8+ Years', desc: 'Multi-threaded enterprise banking architectures, secure microservices, and design patterns.',               logoKey: 'Java',       bg: 'rgba(231,111,0,0.12)'   },
+  { name: 'Spring Boot',        exp: '7+ Years', desc: 'Cloud-native service registries, Spring Cloud configs, JPA layers, and OAuth2 security.',                  logoKey: 'SpringBoot', bg: 'rgba(109,179,63,0.12)'  },
+  { name: 'Python',             exp: '7+ Years', desc: 'FastAPI servers, data engineering scripts, automation pipelines, and custom scrapers.',                    logoKey: 'Python',     bg: 'rgba(55,118,171,0.12)'  },
+  { name: 'AWS',                exp: '6+ Years', desc: 'ECS clusters, serverless Lambdas, secure VPC networking, and cloud IAM setups.',                          logoKey: 'AWS',        bg: 'rgba(255,153,0,0.12)'   },
+  { name: 'Docker',             exp: '5+ Years', desc: 'Repeatable application containerization, multi-stage builds, and Kubernetes orchestration.',               logoKey: 'Docker',     bg: 'rgba(36,150,237,0.12)'  },
+  { name: 'Flutter',            exp: '4+ Years', desc: 'Native compiled Android and iOS mobile applications from a single codebase.',                             logoKey: 'Flutter',    bg: 'rgba(2,86,155,0.12)'    },
+  { name: 'UI/UX Design',       exp: '6+ Years', desc: 'Wireframing, Figma design libraries, client branding, and interactive prototypes.',                       logoKey: 'UIUX',       bg: 'rgba(242,78,30,0.12)'   },
+  { name: 'AI & Machine Learning', exp: '5+ Years', desc: 'LLM integration, automated agent workflows, PyTorch models, and RAG architectures.',                   logoKey: 'AIML',       bg: 'rgba(238,76,44,0.12)'   },
 ];
 
 const teamShowcaseData = [

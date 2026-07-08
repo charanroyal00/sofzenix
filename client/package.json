@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-favicons": "node generate_favicons.js",
+    "convert-logo-transparent": "node convert_logo_transparent.js"
   },
   "dependencies": {
     "axios": "^1.18.1",
@@ -17,7 +19,8 @@
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.80.0",
     "react-icons": "^5.6.0",
-    "react-router-dom": "^7.18.0"
+    "react-router-dom": "^7.18.0",
+    "sofzenix-workspace": "file:.."
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.1",

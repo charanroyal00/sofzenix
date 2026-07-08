@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTrans
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowDown } from 'react-icons/fa';
 import { FaCircleCheck, FaShieldHalved } from 'react-icons/fa6';
-import PremiumHeroBackground from './PremiumHeroBackground';
+import ModernMeshBackground from './ModernMeshBackground';
 
 /* ─── Typewriter ─────────────────────────────────────────── */
 const Typewriter = ({ words }) => {
@@ -141,10 +141,10 @@ const Hero = () => {
         opacity: heroOpacity,
         filter: heroFilter
       }}
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-[#FAFBFF] transition-all duration-300"
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-white transition-all duration-300"
     >
-      {/* ── PREMIUM HERO BACKGROUND ── */}
-      <PremiumHeroBackground mouseX={sX} mouseY={sY} />
+      {/* ── MODERN MESH WAVE BACKGROUND ── */}
+      <ModernMeshBackground mouseX={sX} mouseY={sY} />
 
       {/* ── CENTRE CONTENT ── */}
       <motion.div style={{ y: slideUp }} className="relative z-10 flex flex-col items-center text-center w-full max-w-4xl mx-auto gap-5">

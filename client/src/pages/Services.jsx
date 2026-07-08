@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import { 
   FaCode, 
   FaLaptopCode, 
@@ -47,6 +47,7 @@ import {
   SiGit,
 } from 'react-icons/si';
 import Testimonials from '../components/Testimonials';
+import FormalServiceBackground from '../components/FormalServiceBackground';
 
 // Project screenshot images — served from /public for reliable loading
 const imgSwadzo    = '/project_swadzo.png';
@@ -69,61 +70,7 @@ const TechLogos = {
   Git:        () => <SiGit        className="w-8 h-8" style={{ color: '#F05032' }} />,
 };
 
-// Canvas particle system specifically for Services Page background
-const ServicesBackgroundParticles = () => {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-
-    const resize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      canvas.width = canvas.parentElement.offsetWidth;
-      canvas.height = canvas.parentElement.offsetHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const particles = [];
-    const count = 40;
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
-        radius: Math.random() * 2 + 0.8
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(37, 99, 235, 0.12)';
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      animationFrameId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
-};
+// Removed old particle system - using PremiumHeroBackground instead
 
 const ServicePageCard = ({ service, idx }) => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -210,7 +157,28 @@ const ServicePageCard = ({ service, idx }) => {
 
 const Services = () => {
   const [activeFAQ, setActiveFAQ] = useState(null);
+  const [mobile, setMobile] = useState(false);
   const servicesGridRef = useRef(null);
+  const sectionRef = useRef(null);
+  
+  const mX = useMotionValue(0);
+  const mY = useMotionValue(0);
+  const sX = useSpring(mX, { stiffness: 60, damping: 18 });
+  const sY = useSpring(mY, { stiffness: 60, damping: 18 });
+
+  useEffect(() => {
+    const h = () => setMobile(window.innerWidth < 768);
+    h();
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  const onMove = (e) => {
+    if (mobile || !sectionRef.current) return;
+    const r = sectionRef.current.getBoundingClientRect();
+    mX.set(e.clientX - r.left - r.width / 2);
+    mY.set(e.clientY - r.top - r.height / 2);
+  };
 
   const scrollToServices = () => {
     servicesGridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -218,21 +186,18 @@ const Services = () => {
 
   return (
     <div
-      className="min-h-screen text-[#475569] bg-transparent pt-28 pb-20 relative z-10 overflow-hidden font-sans"
+      ref={sectionRef}
+      onMouseMove={onMove}
+      onMouseLeave={() => { mX.set(0); mY.set(0); }}
+      className="min-h-screen text-[#475569] bg-white pt-28 pb-20 relative overflow-hidden font-sans"
     >
-      {/* Moving background aurora mesh gradients */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="mesh-blob mesh-blob-1 -left-[10%] -top-[10%] opacity-30" />
-        <div className="mesh-blob mesh-blob-2 -right-[15%] top-[25%] opacity-35" />
-        <div className="mesh-blob mesh-blob-3 left-[20%] -bottom-[15%] opacity-30" />
+      {/* Formal Professional Background - Clean and Corporate */}
+      <div className="fixed inset-0 z-0">
+        <FormalServiceBackground mouseX={sX} mouseY={sY} />
       </div>
 
-      {/* Grid Coordinates Overlay */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none z-0" />
-
-      {/* Background Particles Stream */}
-      <ServicesBackgroundParticles />
-
+      {/* Content Container with proper z-index */}
+      <div className="relative z-10">
       {/* 1. HERO SECTION (Background: #F8FAFC) */}
       <section className="relative max-w-[1400px] mx-auto px-6 md:px-8 py-10 md:py-16 text-center flex flex-col items-center gap-6">
         <motion.div
@@ -660,6 +625,7 @@ const Services = () => {
           </div>
         </div>
       </section>
+      </div> {/* End Content Container */}
     </div>
   );
 };
