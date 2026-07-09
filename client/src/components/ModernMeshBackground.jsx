@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
+/**
+ * Clean, Simple & Minimalist Geometric Tech Network Background
+ * Inspired by Swiss/Vercel minimalist aesthetic (matching image_3 reference).
+ * Ultra-lightweight: zero heavy radial glows, zero complex auroras, 100% 60-FPS lag-free.
+ */
 const ModernMeshBackground = ({ mouseX, mouseY }) => {
   const canvasRef = useRef(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -22,246 +27,197 @@ const ModernMeshBackground = ({ mouseX, mouseY }) => {
     let height = (canvas.height = canvas.parentElement.offsetHeight);
 
     const handleResize = () => {
-      if (!canvas) return;
+      if (!canvas || !canvas.parentElement) return;
       width = canvas.width = canvas.parentElement.offsetWidth;
       height = canvas.height = canvas.parentElement.offsetHeight;
     };
     window.addEventListener('resize', handleResize);
 
     const isMobile = width < 768;
-    let time = 0;
     let parallaxX = 0;
     let parallaxY = 0;
+
+    // Localized mouse tracking for subtle interactive connection
+    const localMouse = { x: -1000, y: -1000, active: false };
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      localMouse.x = e.clientX - rect.left;
+      localMouse.y = e.clientY - rect.top;
+      localMouse.active = true;
+    };
+    const handleMouseLeave = () => { localMouse.active = false; };
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
 
     let isTabActive = true;
     const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // ─── RENDER LOOP ───
-    const render = () => {
-      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
 
-      time += reducedMotion ? 0.0003 : 0.002;
+    // ─── INITIALIZE MINIMALIST GEOMETRIC NODES (`Exact match to image_3.png`) ───
+    const nodeCount = isMobile ? 12 : 24;
+    const nodes = [];
+
+    for (let i = 0; i < nodeCount; i++) {
+      // Cluster some on right & left, and ambient connectors in center
+      let x, y;
+      if (i < Math.floor(nodeCount * 0.40)) {
+        x = width * (0.75 + (Math.random() - 0.5) * 0.24);
+        y = height * (0.38 + (Math.random() - 0.5) * 0.45);
+      } else if (i < Math.floor(nodeCount * 0.75)) {
+        x = width * (0.22 + (Math.random() - 0.5) * 0.24);
+        y = height * (0.58 + (Math.random() - 0.5) * 0.45);
+      } else {
+        x = width * (0.2 + Math.random() * 0.6);
+        y = height * (0.15 + Math.random() * 0.7);
+      }
+
+      const isSquare = Math.random() > 0.35; // Most nodes are clean squares/blocks exactly like image_3.png
+      const size = Math.random() * 3.2 + 3.2; // Crisp light-thick sizes (`3.2px to 6.4px`)
+
+      // Light blue & Orange tones (`#38BDF8` / `#3B82F6` and `#F97316` / `#FB923C`) with clean 78% opacity (`light thick`)
+      const isBlue = Math.random() < 0.60;
+      const color = isBlue ? 'rgba(56, 189, 248, 0.78)' : 'rgba(249, 115, 22, 0.78)';
+      const lineColor = isBlue ? 'rgba(56, 189, 248, ' : 'rgba(249, 115, 22, ';
+
+      // Fast, dynamic brisk movement as requested
+      const speedMult = isMobile ? 1.0 : 1.7;
+      const vx = ((Math.random() - 0.5) * 1.5 + (Math.random() < 0.5 ? -0.4 : 0.4)) * speedMult;
+      const vy = ((Math.random() - 0.5) * 1.5 + (Math.random() < 0.5 ? -0.4 : 0.4)) * speedMult;
+
+      nodes.push({
+        x: Math.max(30, Math.min(width - 30, x)),
+        y: Math.max(30, Math.min(height - 30, y)),
+        vx,
+        vy,
+        size,
+        isSquare,
+        color,
+        lineColor,
+        z: Math.random() * 0.5 + 0.5
+      });
+    }
+
+    let lastFrameTime = 0;
+
+    // ─── RENDER ENGINE ───
+    const render = (timestamp) => {
+      if (!isTabActive || !isIntersecting) { rafId = requestAnimationFrame(render); return; }
+      if (timestamp - lastFrameTime < 33) { rafId = requestAnimationFrame(render); return; }
+      lastFrameTime = timestamp;
+
       ctx.clearRect(0, 0, width, height);
 
-      // Smooth mouse parallax
+      // Smooth subtle mouse parallax
       const targetParallaxX = mouseX && typeof mouseX.get === 'function' ? (mouseX.get() / (width || 1)) * 15 : 0;
       const targetParallaxY = mouseY && typeof mouseY.get === 'function' ? (mouseY.get() / (height || 1)) * 15 : 0;
       parallaxX += (targetParallaxX - parallaxX) * 0.08;
       parallaxY += (targetParallaxY - parallaxY) * 0.08;
 
-      // ── BASE: Soft white/light gray background ──
-      const baseGrad = ctx.createLinearGradient(0, 0, width, height);
+      // ── 1. CLEAN, MINIMALIST BRIGHT WHITE BASE (`Not heavy`) ──
+      const baseGrad = ctx.createLinearGradient(0, 0, 0, height);
       baseGrad.addColorStop(0, '#FFFFFF');
-      baseGrad.addColorStop(0.5, '#FAFBFC');
-      baseGrad.addColorStop(1, '#F8F9FA');
+      baseGrad.addColorStop(0.6, '#FAFBFC');
+      baseGrad.addColorStop(1, '#F8FAFC');
       ctx.fillStyle = baseGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // ── FLOWING WAVE LINES (Topographic/Contour Style) ──
-      
-      // Blue gradient wave (bottom-left)
-      const drawFlowingWaves = (corner, colorStops, originX, originY) => {
-        const numLines = isMobile ? 60 : 120; // Dense lines for fabric-like texture
-        const lineSpacing = isMobile ? 8 : 6; // Close spacing
-        
-        ctx.save();
-        ctx.globalCompositeOperation = 'multiply';
-        ctx.globalAlpha = 0.85;
+      // ── 2. UPDATE & RENDER MINIMALIST NETWORK (`image_3.png with fast movement & blue/orange`) ──
+      nodes.forEach(node => {
+        if (!reducedMotion) {
+          node.x += node.vx;
+          node.y += node.vy;
+          if (node.x < 15 || node.x > width - 15) node.vx *= -1;
+          if (node.y < 15 || node.y > height - 15) node.vy *= -1;
+        }
+      });
 
-        for (let i = 0; i < numLines; i++) {
-          const progress = i / numLines;
-          const distanceFromOrigin = i * lineSpacing;
-          
-          // Color interpolation through gradient
-          let r, g, b, opacity;
-          if (progress < 0.33) {
-            const t = progress / 0.33;
-            if (corner === 'blue') {
-              // #4F7CFF → #6C5CE7
-              r = Math.round(79 + (108 - 79) * t);
-              g = Math.round(124 + (92 - 124) * t);
-              b = Math.round(255 + (231 - 255) * t);
-            } else {
-              // #FF6B4A → #FF9068
-              r = Math.round(255 + (255 - 255) * t);
-              g = Math.round(107 + (144 - 107) * t);
-              b = Math.round(74 + (104 - 74) * t);
-            }
-          } else if (progress < 0.67) {
-            const t = (progress - 0.33) / 0.34;
-            if (corner === 'blue') {
-              // #6C5CE7 → #A78BFA
-              r = Math.round(108 + (167 - 108) * t);
-              g = Math.round(92 + (139 - 92) * t);
-              b = Math.round(231 + (250 - 231) * t);
-            } else {
-              // #FF9068 → #FFC7A8
-              r = Math.round(255 + (255 - 255) * t);
-              g = Math.round(144 + (199 - 144) * t);
-              b = Math.round(104 + (168 - 104) * t);
-            }
-          } else {
-            const t = (progress - 0.67) / 0.33;
-            if (corner === 'blue') {
-              // #A78BFA → fade to transparent
-              r = Math.round(167 + (200 - 167) * t);
-              g = Math.round(139 + (180 - 139) * t);
-              b = Math.round(250 + (255 - 250) * t);
-            } else {
-              // #FFC7A8 → fade to transparent
-              r = Math.round(255 + (255 - 255) * t);
-              g = Math.round(199 + (220 - 199) * t);
-              b = Math.round(168 + (200 - 168) * t);
-            }
+      // Draw crisp, light-thick connecting web lines (`1.3px width`) in light blue & orange
+      ctx.lineWidth = 1.3;
+      const maxDist = isMobile ? 140 : 190;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        const px1 = n1.x + parallaxX * n1.z;
+        const py1 = n1.y + parallaxY * n1.z;
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const px2 = n2.x + parallaxX * n2.z;
+          const py2 = n2.y + parallaxY * n2.z;
+
+          const dx = px1 - px2;
+          const dy = py1 - py2;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < maxDist) {
+            // Clean, light-thick blue / orange connecting lines
+            const alpha = (1 - dist / maxDist) * 0.38 * ((n1.z + n2.z) / 2);
+            ctx.strokeStyle = `${n1.lineColor}${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.stroke();
           }
-
-          // Fade opacity based on distance from origin
-          opacity = (1 - progress * 0.8) * 0.35; // 20-40% opacity range
-
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-          ctx.lineWidth = 1;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-
-          ctx.beginPath();
-
-          // Draw flowing sine/ripple wave
-          const segments = isMobile ? 150 : 300;
-          for (let j = 0; j <= segments; j++) {
-            const t = j / segments;
-            let x, y;
-
-            if (corner === 'blue') {
-              // Bottom-left origin, flowing upward/rightward
-              x = originX + t * width * 0.7 + parallaxX;
-              
-              // Multiple sine waves for organic flow
-              const wave1 = Math.sin(t * 8 + time * 0.8 + i * 0.15) * 40;
-              const wave2 = Math.sin(t * 4 + time * 0.5 + i * 0.1) * 25;
-              const wave3 = Math.cos(t * 12 + time * 0.3) * 15;
-              
-              y = originY - distanceFromOrigin - t * height * 0.5 + wave1 + wave2 + wave3 + parallaxY;
-            } else {
-              // Bottom-right origin, flowing upward/leftward
-              x = originX - t * width * 0.7 + parallaxX;
-              
-              const wave1 = Math.sin(t * 8 - time * 0.7 + i * 0.15) * 40;
-              const wave2 = Math.sin(t * 4 - time * 0.6 + i * 0.1) * 25;
-              const wave3 = Math.cos(t * 12 - time * 0.4) * 15;
-              
-              y = originY - distanceFromOrigin - t * height * 0.5 + wave1 + wave2 + wave3 + parallaxY;
-            }
-
-            if (j === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
-          }
-
-          ctx.stroke();
         }
 
-        ctx.restore();
-      };
-
-      // Draw blue wave from bottom-left
-      drawFlowingWaves('blue', 
-        ['#4F7CFF', '#6C5CE7', '#A78BFA'], 
-        -width * 0.1, 
-        height + 50
-      );
-
-      // Draw orange/peach wave from bottom-right
-      drawFlowingWaves('orange', 
-        ['#FF6B4A', '#FF9068', '#FFC7A8'], 
-        width + width * 0.1, 
-        height + 50
-      );
-
-      // Additional wave from top-right for more coverage
-      const drawTopRightWave = () => {
-        const numLines = isMobile ? 40 : 80;
-        const lineSpacing = isMobile ? 10 : 8;
-        
-        ctx.save();
-        ctx.globalCompositeOperation = 'multiply';
-        ctx.globalAlpha = 0.7;
-
-        for (let i = 0; i < numLines; i++) {
-          const progress = i / numLines;
-          const distanceFromOrigin = i * lineSpacing;
-          
-          let r, g, b, opacity;
-          if (progress < 0.5) {
-            const t = progress / 0.5;
-            // #FF9068 → #FFC7A8
-            r = Math.round(255);
-            g = Math.round(144 + (199 - 144) * t);
-            b = Math.round(104 + (168 - 104) * t);
-          } else {
-            const t = (progress - 0.5) / 0.5;
-            // #FFC7A8 → fade
-            r = Math.round(255);
-            g = Math.round(199 + (230 - 199) * t);
-            b = Math.round(168 + (210 - 168) * t);
+        // Subtle clean mouse connection
+        if (localMouse.active && !isMobile) {
+          const mdx = px1 - localMouse.x;
+          const mdy = py1 - localMouse.y;
+          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mDist < 140) {
+            const mAlpha = (1 - mDist / 140) * 0.35;
+            ctx.strokeStyle = `rgba(37, 99, 235, ${mAlpha})`;
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(localMouse.x, localMouse.y);
+            ctx.stroke();
           }
-
-          opacity = (1 - progress * 0.9) * 0.3;
-
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-          ctx.lineWidth = 1;
-          ctx.lineCap = 'round';
-
-          ctx.beginPath();
-
-          const segments = isMobile ? 120 : 250;
-          for (let j = 0; j <= segments; j++) {
-            const t = j / segments;
-            
-            const x = width + 50 - t * width * 0.6 - parallaxX * 0.5;
-            
-            const wave1 = Math.sin(t * 6 - time * 0.5 + i * 0.12) * 35;
-            const wave2 = Math.cos(t * 3 - time * 0.4) * 20;
-            
-            const y = -50 + distanceFromOrigin + t * height * 0.5 + wave1 + wave2 - parallaxY * 0.5;
-
-            if (j === 0) {
-              ctx.moveTo(x, y);
-            } else {
-              ctx.lineTo(x, y);
-            }
-          }
-
-          ctx.stroke();
         }
+      }
 
-        ctx.restore();
-      };
+      // Draw crisp minimalist geometric nodes (`Squares & Dots exactly like image_3.png`)
+      nodes.forEach(node => {
+        const px = node.x + parallaxX * node.z;
+        const py = node.y + parallaxY * node.z;
 
-      drawTopRightWave();
+        ctx.fillStyle = node.color;
+        if (node.isSquare) {
+          // Clean geometric square block
+          ctx.fillRect(px - node.size / 2, py - node.size / 2, node.size, node.size);
+        } else {
+          // Crisp circular dot
+          ctx.beginPath();
+          ctx.arc(px, py, node.size * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
 
       rafId = requestAnimationFrame(render);
     };
 
-    render();
+    render(0);
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [mouseX, mouseY, reducedMotion]);
 
   return (
-    <>
-      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none bg-white">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-      </div>
-      {/* Subtle noise texture for depth */}
-      <div className="absolute inset-0 w-full h-full z-[1] pointer-events-none bg-noise opacity-[0.012]" />
-    </>
+    <div className="absolute inset-0 w-full h-full z-0 pointer-events-none bg-[#FFFFFF] overflow-hidden translate-z-0">
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+    </div>
   );
 };
 

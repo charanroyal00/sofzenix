@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   FaArrowRight, 
@@ -40,7 +40,23 @@ const CTAParticles = () => {
       });
     }
 
-    const draw = () => {
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas) observer.observe(canvas);
+
+    let lastFrameTime = 0;
+    const draw = (timestamp) => {
+      if (!isIntersecting || document.hidden) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      if (timestamp - lastFrameTime < 33) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = timestamp;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         p.x += p.vx;
@@ -63,10 +79,11 @@ const CTAParticles = () => {
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
+      if (observer) observer.disconnect();
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 translate-z-0" />;
 };
 
 const CTASection = () => {
@@ -78,31 +95,14 @@ const CTASection = () => {
   const springX = useSpring(mouseX, { stiffness: 80, damping: 20 });
   const springY = useSpring(mouseY, { stiffness: 80, damping: 20 });
 
-  const [spotlightStyle, setSpotlightStyle] = useState({});
+  const background = useMotionTemplate`radial-gradient(500px circle at ${springX}px ${springY}px, rgba(37, 99, 235, 0.08) 0%, rgba(249, 115, 22, 0.03) 40%, transparent 80%)`;
 
-  useEffect(() => {
-    const unsubscribeX = springX.on("change", (latestX) => {
-      setSpotlightStyle(prev => ({
-        ...prev,
-        background: `radial-gradient(500px circle at ${latestX}px ${springY.get()}px, rgba(37, 99, 235, 0.08) 0%, rgba(249, 115, 22, 0.03) 40%, transparent 80%)`
-      }));
-    });
-
-    const unsubscribeY = springY.on("change", (latestY) => {
-      setSpotlightStyle(prev => ({
-        ...prev,
-        background: `radial-gradient(500px circle at ${springX.get()}px ${latestY}px, rgba(37, 99, 235, 0.08) 0%, rgba(249, 115, 22, 0.03) 40%, transparent 80%)`
-      }));
-    });
-
-    return () => {
-      unsubscribeX();
-      unsubscribeY();
-    };
-  }, [springX, springY]);
-
+  let lastMoveTime = 0;
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
+    const now = Date.now();
+    if (now - lastMoveTime < 30) return;
+    lastMoveTime = now;
     const rect = containerRef.current.getBoundingClientRect();
     mouseX.set(e.clientX - rect.left);
     mouseY.set(e.clientY - rect.top);
@@ -130,10 +130,10 @@ const CTASection = () => {
         {/* Subtle grid with slow scroll animation */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.15] animate-pulse-slow" />
         
-        {/* Spotlight overlay mapped to mouse */}
-        <div 
+        {/* Spotlight overlay mapped to mouse using compositor-friendly motion template */}
+        <motion.div 
           className="absolute inset-0 transition-opacity duration-300 pointer-events-none" 
-          style={spotlightStyle}
+          style={{ background }}
         />
 
         {/* Floating blurred glowing background auroras */}

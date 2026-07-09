@@ -27,23 +27,36 @@ const Header = () => {
   const location = useLocation();
 
   // Listen to scroll to update navbar background opacity
+  // Passive scroll listener for zero main-thread blocking
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu on route change & lock body scroll when open to prevent layout shifts
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
 
   const handleVerifyClick = (e) => {
     setIsMobileMenuOpen(false);
@@ -198,8 +211,8 @@ const Header = () => {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="fixed top-0 right-0 h-full w-[280px] bg-white/95 border-l border-gray-200/50 z-40 p-6 shadow-2xl flex flex-col justify-between lg:hidden"
+              transition={{ type: 'spring', damping: 28, stiffness: 320, mass: 0.8 }}
+              className="fixed top-0 right-0 h-full w-[280px] bg-white/95 border-l border-gray-200/50 z-40 p-6 shadow-2xl flex flex-col justify-between lg:hidden translate-z-0 will-change-transform"
             >
               <div className="mt-6">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200/20">

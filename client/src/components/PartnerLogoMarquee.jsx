@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 // Custom inline SVG logo for RazorpayX formatted for dark/light mode support.
 export const RazorpayXLogo = () => (
@@ -300,7 +300,7 @@ export const partnersList = [
 // All partners now have logos — show all in the marquee
 const marqueeItems = partnersList;
 
-const PartnerLogoMarquee = ({ isFullColor = false }) => {
+const PartnerLogoMarquee = memo(({ isFullColor = false }) => {
   const gapClass = isFullColor 
     ? "gap-12 md:gap-20 pr-12 md:pr-20" 
     : "gap-6 md:gap-10 pr-6 md:pr-10";
@@ -349,6 +349,8 @@ const PartnerLogoMarquee = ({ isFullColor = false }) => {
                 <>
                   <img 
                     src={partner.logo} 
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => { 
                       e.target.onerror = null; 
                       e.target.style.display = 'none'; 
@@ -383,6 +385,8 @@ const PartnerLogoMarquee = ({ isFullColor = false }) => {
                 <>
                   <img 
                     src={partner.logo} 
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => { 
                       e.target.onerror = null; 
                       e.target.style.display = 'none'; 
@@ -403,6 +407,6 @@ const PartnerLogoMarquee = ({ isFullColor = false }) => {
       </div>
     </div>
   );
-};
+});
 
 export default PartnerLogoMarquee;

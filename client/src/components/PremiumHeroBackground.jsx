@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 
+/**
+ * Clean, Lightweight Geometric Network Background for About Hero
+ * Inspired by Swiss/Vercel minimalist engineering aesthetic (`image_3.png`).
+ * Zero heavy gradients, zero heavy radial glows, 100% 60-FPS lag-free.
+ */
 const PremiumHeroBackground = ({ mouseX, mouseY }) => {
   const canvasRef = useRef(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -23,263 +27,176 @@ const PremiumHeroBackground = ({ mouseX, mouseY }) => {
     let height = (canvas.height = canvas.parentElement.offsetHeight);
 
     const handleResize = () => {
-      if (!canvas) return;
+      if (!canvas || !canvas.parentElement) return;
       width = canvas.width = canvas.parentElement.offsetWidth;
       height = canvas.height = canvas.parentElement.offsetHeight;
     };
     window.addEventListener('resize', handleResize);
 
     const isMobile = width < 768;
-    const isTablet = width >= 768 && width < 1024;
-
-    // Dense grid for fine mesh detail like the reference image
-    const meshCols = isMobile ? 32 : isTablet ? 48 : 64;
-    const meshRows = isMobile ? 22 : isTablet ? 32 : 42;
-
-    let time = 0;
     let parallaxX = 0;
     let parallaxY = 0;
+
+    const localMouse = { x: -1000, y: -1000, active: false };
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      localMouse.x = e.clientX - rect.left;
+      localMouse.y = e.clientY - rect.top;
+      localMouse.active = true;
+    };
+    const handleMouseLeave = () => { localMouse.active = false; };
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave);
 
     let isTabActive = true;
     const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
 
-    // ─── RENDER LOOP ───
-    const render = () => {
-      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
+    // ─── INITIALIZE CLEAN GEOMETRIC NODES (`image_3.png`) ───
+    const nodeCount = isMobile ? 12 : 24;
+    const nodes = [];
 
-      time += reducedMotion ? 0.0003 : 0.003;
+    for (let i = 0; i < nodeCount; i++) {
+      let x = width * (0.15 + Math.random() * 0.7);
+      let y = height * (0.15 + Math.random() * 0.7);
+
+      const isSquare = Math.random() > 0.35;
+      const size = Math.random() * 3.2 + 3.2;
+      const isBlue = Math.random() < 0.60;
+      const color = isBlue ? 'rgba(56, 189, 248, 0.78)' : 'rgba(249, 115, 22, 0.78)';
+      const lineColor = isBlue ? 'rgba(56, 189, 248, ' : 'rgba(249, 115, 22, ';
+
+      const speedMult = isMobile ? 1.0 : 1.7;
+      const vx = ((Math.random() - 0.5) * 1.5 + (Math.random() < 0.5 ? -0.4 : 0.4)) * speedMult;
+      const vy = ((Math.random() - 0.5) * 1.5 + (Math.random() < 0.5 ? -0.4 : 0.4)) * speedMult;
+
+      nodes.push({
+        x: Math.max(30, Math.min(width - 30, x)),
+        y: Math.max(30, Math.min(height - 30, y)),
+        vx,
+        vy,
+        size,
+        isSquare,
+        color,
+        lineColor,
+        z: Math.random() * 0.5 + 0.5
+      });
+    }
+
+    let lastFrameTime = 0;
+
+    // ─── RENDER ENGINE ───
+    const render = (timestamp) => {
+      if (!isTabActive || !isIntersecting) { rafId = requestAnimationFrame(render); return; }
+      if (timestamp - lastFrameTime < 33) { rafId = requestAnimationFrame(render); return; }
+      lastFrameTime = timestamp;
+
       ctx.clearRect(0, 0, width, height);
 
-      // Smooth mouse parallax
-      const targetParallaxX = mouseX && typeof mouseX.get === 'function' ? (mouseX.get() / (width || 1)) * 12 : 0;
-      const targetParallaxY = mouseY && typeof mouseY.get === 'function' ? (mouseY.get() / (height || 1)) * 12 : 0;
-      parallaxX += (targetParallaxX - parallaxX) * 0.07;
-      parallaxY += (targetParallaxY - parallaxY) * 0.07;
+      const targetParallaxX = mouseX && typeof mouseX.get === 'function' ? (mouseX.get() / (width || 1)) * 15 : 0;
+      const targetParallaxY = mouseY && typeof mouseY.get === 'function' ? (mouseY.get() / (height || 1)) * 15 : 0;
+      parallaxX += (targetParallaxX - parallaxX) * 0.08;
+      parallaxY += (targetParallaxY - parallaxY) * 0.08;
 
-      // ── LAYER 1: Pure white base ──
-      ctx.fillStyle = '#FFFFFF';
+      // Clean bright white base
+      const baseGrad = ctx.createLinearGradient(0, 0, 0, height);
+      baseGrad.addColorStop(0, '#FFFFFF');
+      baseGrad.addColorStop(1, '#F8FAFC');
+      ctx.fillStyle = baseGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // ── LAYER 2: Subtle light-blue tint in center-top area ──
-      const topGrad = ctx.createLinearGradient(0, 0, 0, height * 0.5);
-      topGrad.addColorStop(0, 'rgba(224, 234, 255, 0.55)');
-      topGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      ctx.fillStyle = topGrad;
-      ctx.fillRect(0, 0, width, height * 0.5);
-
-      // ── LAYER 3: Large ambient glows (blue left, orange right) ──
-      const drawGlow = (gx, gy, radius, color) => {
-        const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, radius);
-        g.addColorStop(0, color);
-        g.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(gx, gy, radius, 0, Math.PI * 2);
-        ctx.fill();
-      };
-
-      const breathe = Math.sin(time * 0.5) * 40;
-      // Blue glow — bottom-left
-      drawGlow(
-        width * 0.05 + parallaxX,
-        height * 0.82 + parallaxY,
-        520 + breathe,
-        'rgba(37, 99, 235, 0.28)'
-      );
-      // Lighter blue mid-left
-      drawGlow(
-        width * 0.12 + parallaxX,
-        height * 0.65 + parallaxY,
-        340,
-        'rgba(99, 143, 255, 0.18)'
-      );
-      // Orange glow — bottom-right
-      drawGlow(
-        width * 0.95 + parallaxX,
-        height * 0.82 + parallaxY,
-        520 + breathe,
-        'rgba(249, 115, 22, 0.28)'
-      );
-      // Peach mid-right
-      drawGlow(
-        width * 0.88 + parallaxX,
-        height * 0.65 + parallaxY,
-        340,
-        'rgba(251, 170, 100, 0.18)'
-      );
-
-
-      // ── LAYER 4: 3D wave mesh ──
-      const fov = 700;
-      const camDist = 380;
-
-      const drawWaveMesh = (isFg) => {
-        // Foreground wave: larger, more visible; background: slightly behind
-        const baseY   = isFg ? height * 0.70 : height * 0.60;
-        const offsetZ = isFg ? 0 : 90;
-        const maxA    = isFg ? 0.82 : 0.52;
-        const tiltX   = isFg ? -0.60 : -0.56;
-        const cosX = Math.cos(tiltX);
-        const sinX = Math.sin(tiltX);
-
-        const xSpan = width  * (isFg ? 1.85 : 2.1);
-        const ySpan = height * (isFg ? 1.15 : 1.35);
-        const colSp = xSpan / meshCols;
-        const rowSp = ySpan / meshRows;
-
-        const pts = [];
-        for (let r = 0; r <= meshRows; r++) {
-          const row = [];
-          const pY  = r / meshRows;
-          const lY  = (r - meshRows / 2) * rowSp;
-          for (let c = 0; c <= meshCols; c++) {
-            const pX = c / meshCols;
-            const lX = (c - meshCols / 2) * colSp;
-
-            // Side peaks with flat center valley (matches reference)
-            const dist  = Math.abs(pX - 0.5) * 2;
-            const peak  = Math.pow(dist, 1.6) * (isFg ? 160 : 135);
-
-            // Layered wave motion
-            const wX = pX * 5.5 - time * (isFg ? 0.50 : 0.38);
-            const wY = pY * 3.8 + (isFg ? time * 0.60 : -time * 0.50);
-            const ripple = Math.sin(wX) * Math.cos(wY) * (isFg ? 28 : 20)
-                         + Math.sin(pX * 16 + time * 1.8) * 6
-                         + Math.cos(pY * 10 + time * 1.2) * 4;
-
-            const lZ = peak + ripple;
-            const y1 = lY * cosX - lZ * sinX;
-            const z1 = lY * sinX + lZ * cosX;
-
-            const wXfinal = lX + parallaxX * (isFg ? 3.0 : 1.5);
-            const wYfinal = y1 + baseY + parallaxY * (isFg ? 3.0 : 1.5);
-            const wZfinal = z1 + offsetZ + camDist;
-
-            const sx = width / 2  + (wXfinal * fov) / wZfinal;
-            const sy = height / 2.2 + (wYfinal * fov) / wZfinal;
-
-            const depthFade = Math.max(0, 1 - (wZfinal - 80) / 900);
-            const edgeFade  = Math.sin(pX * Math.PI);
-            const alpha     = Math.pow(pY, 0.65) * edgeFade * depthFade * maxA;
-
-            row.push({ x: sx, y: sy, z: wZfinal, alpha, pX });
-          }
-          pts.push(row);
+      nodes.forEach(node => {
+        if (!reducedMotion) {
+          node.x += node.vx;
+          node.y += node.vy;
+          if (node.x < 15 || node.x > width - 15) node.vx *= -1;
+          if (node.y < 15 || node.y > height - 15) node.vy *= -1;
         }
+      });
 
+      // Draw crisp, light-thick connecting lines (`1.3px width`) in light blue & orange
+      ctx.lineWidth = 1.3;
+      const maxDist = isMobile ? 140 : 190;
 
-        // ── Colored surface fills ──
-        for (let r = 0; r < meshRows; r++) {
-          for (let c = 0; c < meshCols; c++) {
-            const p1 = pts[r][c], p2 = pts[r][c+1];
-            const p3 = pts[r+1][c+1], p4 = pts[r+1][c];
-            const avgA = (p1.alpha + p2.alpha + p3.alpha + p4.alpha) / 4;
-            if (avgA < 0.01) continue;
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        const px1 = n1.x + parallaxX * n1.z;
+        const py1 = n1.y + parallaxY * n1.z;
 
-            const midX = (p1.x + p2.x + p3.x + p4.x) / 4;
-            // Normalized 0→1 across screen width
-            const t = midX / width;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const px2 = n2.x + parallaxX * n2.z;
+          const py2 = n2.y + parallaxY * n2.z;
 
-            // Blue side (#3B6FEE) → white center → Orange side (#F97316)
-            let r_, g_, b_;
-            if (t < 0.38) {
-              // Blue zone
-              const w = 1 - t / 0.38;
-              r_ = Math.round(59  + (255 - 59)  * (1 - w));
-              g_ = Math.round(111 + (255 - 111) * (1 - w));
-              b_ = Math.round(238 + (255 - 238) * (1 - w));
-            } else if (t > 0.62) {
-              // Orange zone
-              const w = (t - 0.62) / 0.38;
-              r_ = Math.round(255 - (255 - 249) * (1 - w));
-              g_ = Math.round(255 - (255 - 115) * w);
-              b_ = Math.round(255 - (255 - 22)  * w);
-            } else {
-              // Pure white center
-              r_ = 255; g_ = 255; b_ = 255;
-            }
+          const dx = px1 - px2;
+          const dy = py1 - py2;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-            ctx.fillStyle = `rgba(${r_},${g_},${b_},${avgA * 0.55})`;
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.38 * ((n1.z + n2.z) / 2);
+            ctx.strokeStyle = `${n1.lineColor}${alpha})`;
             ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.lineTo(p3.x, p3.y);
-            ctx.lineTo(p4.x, p4.y);
-            ctx.closePath();
-            ctx.fill();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.stroke();
           }
         }
 
-        // ── White wireframe lines ──
-        for (let r = 0; r <= meshRows; r++) {
-          for (let c = 0; c <= meshCols; c++) {
-            const p = pts[r][c];
-
-            if (c < meshCols) {
-              const pN = pts[r][c+1];
-              const la = Math.min(p.alpha, pN.alpha);
-              if (la > 0.015) {
-                ctx.strokeStyle = `rgba(255,255,255,${la * 0.78})`;
-                ctx.lineWidth = 0.5 + (1 - p.z / (camDist + 300)) * 0.5;
-                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pN.x, pN.y); ctx.stroke();
-              }
-            }
-            if (r < meshRows) {
-              const pB = pts[r+1][c];
-              const la = Math.min(p.alpha, pB.alpha);
-              if (la > 0.015) {
-                ctx.strokeStyle = `rgba(255,255,255,${la * 0.78})`;
-                ctx.lineWidth = 0.5 + (1 - p.z / (camDist + 300)) * 0.5;
-                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pB.x, pB.y); ctx.stroke();
-              }
-            }
-
-            // Vertex dots
-            if (p.alpha > 0.025) {
-              const t = p.pX;
-              let dr, dg, db;
-              if (t < 0.4) {
-                dr = 59; dg = 111; db = 238;
-              } else if (t > 0.6) {
-                dr = 249; dg = 115; db = 22;
-              } else {
-                dr = 200; dg = 210; db = 255;
-              }
-              const ds = (isFg ? 1.2 : 0.85) + (1 - p.z / (camDist + 300)) * 1.1;
-              ctx.fillStyle = `rgba(${dr},${dg},${db},${p.alpha * 1.8})`;
-              ctx.beginPath();
-              ctx.arc(p.x, p.y, ds, 0, Math.PI * 2);
-              ctx.fill();
-            }
+        if (localMouse.active && !isMobile) {
+          const mdx = px1 - localMouse.x;
+          const mdy = py1 - localMouse.y;
+          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mDist < 140) {
+            const mAlpha = (1 - mDist / 140) * 0.35;
+            ctx.strokeStyle = `rgba(37, 99, 235, ${mAlpha})`;
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(localMouse.x, localMouse.y);
+            ctx.stroke();
           }
         }
-      }; // end drawWaveMesh
+      }
 
-      // Back wave first, then foreground
-      drawWaveMesh(false);
-      drawWaveMesh(true);
+      // Crisp geometric squares & dots
+      nodes.forEach(node => {
+        const px = node.x + parallaxX * node.z;
+        const py = node.y + parallaxY * node.z;
+
+        ctx.fillStyle = node.color;
+        if (node.isSquare) {
+          ctx.fillRect(px - node.size / 2, py - node.size / 2, node.size, node.size);
+        } else {
+          ctx.beginPath();
+          ctx.arc(px, py, node.size * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
 
       rafId = requestAnimationFrame(render);
     };
 
-    render();
+    render(0);
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [mouseX, mouseY, reducedMotion]);
 
   return (
-    <>
-      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
-      </div>
-      <div className="absolute inset-0 w-full h-full z-[1] pointer-events-none bg-noise opacity-[0.012]" />
-    </>
+    <div className="absolute inset-0 w-full h-full z-0 pointer-events-none bg-[#FFFFFF] overflow-hidden translate-z-0">
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+    </div>
   );
 };
 

@@ -240,7 +240,13 @@ const ConfettiCanvas = () => {
       });
     }
 
-    const draw = () => {
+    let lastFrameTime = 0;
+    const draw = (timestamp) => {
+      if (timestamp - lastFrameTime < 33) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = timestamp;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let active = false;
 
@@ -346,6 +352,8 @@ const FounderCard = ({ image, name, title, message, quoteAuthor, link }) => {
         <img 
           src={image} 
           alt={name} 
+          loading="lazy"
+          decoding="async"
           className="w-full aspect-[4/3] lg:aspect-square object-cover rounded-xl brightness-[1.02] group-hover:scale-[1.03] transition-transform duration-300"
           style={{ display: 'block', minHeight: '200px', width: '100%' }}
         />
@@ -446,8 +454,12 @@ const EcosystemVisualization = () => {
   const rotateX = useSpring(useTransform(y, [-150, 150], [8, -8]), { stiffness: 90, damping: 22 });
   const rotateY = useSpring(useTransform(x, [-150, 150], [-8, 8]), { stiffness: 90, damping: 22 });
 
+  let lastMoveTime = 0;
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
+    const now = Date.now();
+    if (now - lastMoveTime < 30) return;
+    lastMoveTime = now;
     const rect = containerRef.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -686,7 +698,7 @@ const About = () => {
     <div className="bg-transparent min-h-screen text-[#475569] select-none relative overflow-hidden">
       
       {/* Premium 3D mesh background covering the entire About Hero */}
-      <div className="absolute inset-0 h-[85vh] z-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 h-[85vh] z-0 overflow-hidden pointer-events-none translate-z-0">
         <PremiumHeroBackground />
       </div>
 
@@ -1134,6 +1146,8 @@ const About = () => {
                   <img 
                     src={cert.img} 
                     alt={cert.title} 
+                    loading="lazy"
+                    decoding="async"
                     className="max-w-full max-h-full object-contain group-hover:scale-[1.04] transition-transform duration-300"
                     style={{ display: 'block', maxHeight: '100px' }}
                   />
@@ -1182,6 +1196,8 @@ const About = () => {
                   <img 
                     src={activeCert.img} 
                     alt={activeCert.title} 
+                    loading="lazy"
+                    decoding="async"
                     className="max-h-[65vh] object-contain max-w-full"
                   />
                   {/* Glowing seal watermark */}

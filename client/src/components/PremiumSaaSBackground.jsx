@@ -30,9 +30,9 @@ const PremiumSaaSBackground = ({ mouseX, mouseY }) => {
 
     const isMobile = width < 768;
 
-    // Ultra-dense mesh for premium feel
-    const meshCols = isMobile ? 60 : 100;
-    const meshRows = isMobile ? 40 : 65;
+    // Ultra-dense mesh optimized for high-FPS performance
+    const meshCols = isMobile ? 24 : 44;
+    const meshRows = isMobile ? 16 : 28;
 
     let time = 0;
     let parallaxX = 0;
@@ -42,9 +42,15 @@ const PremiumSaaSBackground = ({ mouseX, mouseY }) => {
     const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
+
     // Microscopic floating particles
     const particles = [];
-    const particleCount = isMobile ? 40 : 80;
+    const particleCount = isMobile ? 15 : 25;
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
@@ -58,7 +64,7 @@ const PremiumSaaSBackground = ({ mouseX, mouseY }) => {
 
     // Bokeh circles
     const bokeh = [];
-    const bokehCount = isMobile ? 8 : 15;
+    const bokehCount = isMobile ? 4 : 8;
     for (let i = 0; i < bokehCount; i++) {
       bokeh.push({
         x: Math.random() * width,
@@ -71,7 +77,7 @@ const PremiumSaaSBackground = ({ mouseX, mouseY }) => {
 
     // ─── RENDER LOOP ───
     const render = () => {
-      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
+      if (!isTabActive || !isIntersecting) { rafId = requestAnimationFrame(render); return; }
 
       time += reducedMotion ? 0.0002 : 0.0018;
       ctx.clearRect(0, 0, width, height);
@@ -310,6 +316,7 @@ const PremiumSaaSBackground = ({ mouseX, mouseY }) => {
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };

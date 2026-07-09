@@ -38,6 +38,12 @@ const FormalServiceBackground = ({ mouseX, mouseY }) => {
     const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
+
     // Minimal floating particles for subtle movement
     const particles = [];
     const particleCount = isMobile ? 15 : 25;
@@ -53,7 +59,7 @@ const FormalServiceBackground = ({ mouseX, mouseY }) => {
 
     // ─── RENDER LOOP ───
     const render = () => {
-      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
+      if (!isTabActive || !isIntersecting) { rafId = requestAnimationFrame(render); return; }
 
       time += reducedMotion ? 0.0002 : 0.002;
       ctx.clearRect(0, 0, width, height);
@@ -122,21 +128,17 @@ const FormalServiceBackground = ({ mouseX, mouseY }) => {
       const offsetX = ((time * 20) % gridSize) + parallaxX * 0.5;
       const offsetY = ((time * 15) % gridSize) + parallaxY * 0.5;
 
-      // Vertical lines
+      // Vertical & horizontal grid batched
+      ctx.beginPath();
       for (let x = offsetX; x < width; x += gridSize) {
-        ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
-        ctx.stroke();
       }
-
-      // Horizontal lines
       for (let y = offsetY; y < height; y += gridSize) {
-        ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
-        ctx.stroke();
       }
+      ctx.stroke();
 
       // ── LAYER 5: Connecting lines between nearby particles (network effect) ──
       const connectionDistance = isMobile ? 120 : 150;
@@ -181,6 +183,7 @@ const FormalServiceBackground = ({ mouseX, mouseY }) => {
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };

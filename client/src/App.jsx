@@ -1,43 +1,69 @@
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './layout/Layout';
 import Home from './pages/Home';
-import About from './pages/About';
-import Services from './pages/Services';
-import Portfolio from './pages/Portfolio';
-import Careers from './pages/Careers';
-import Internships from './pages/Internships';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-import Partners from './pages/Partners';
-import Hire from './pages/Hire';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
-
 import ScrollToTop from './components/ScrollToTop';
-import WireframeLandscape from './components/WireframeLandscape';
+
+// Route-based lazy loading for code splitting
+const About = lazy(() => import('./pages/About'));
+const Services = lazy(() => import('./pages/Services'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Careers = lazy(() => import('./pages/Careers'));
+const Internships = lazy(() => import('./pages/Internships'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Partners = lazy(() => import('./pages/Partners'));
+const Hire = lazy(() => import('./pages/Hire'));
+const Login = lazy(() => import('./pages/Login'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const WireframeLandscape = lazy(() => import('./components/WireframeLandscape'));
+
+// Instant zero-CLS fallback loader
+const PageLoader = () => (
+  <div className="min-h-[70vh] w-full flex items-center justify-center p-8">
+    <div className="w-10 h-10 rounded-full border-3 border-[#2563EB]/20 border-t-[#2563EB] animate-spin" />
+  </div>
+);
 
 function App() {
+  // Idle preloading of key pages for instant navigation without blocking initial load
+  useEffect(() => {
+    const preloadRoutes = () => {
+      import('./pages/About');
+      import('./pages/Services');
+      import('./pages/Portfolio');
+      import('./pages/Contact');
+    };
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(preloadRoutes, { timeout: 3000 });
+    } else {
+      setTimeout(preloadRoutes, 1500);
+    }
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        {/* Standalone 3D Wireframe Mesh Background View (No UI, No Text, No Logos) */}
-        <Route path="/wireframe" element={<WireframeLandscape />} />
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="services" element={<Services />} />
-          <Route path="portfolio" element={<Portfolio />} />
-          <Route path="partners" element={<Partners />} />
-          <Route path="hire" element={<Hire />} />
-          <Route path="careers" element={<Careers />} />
-          <Route path="internships" element={<Internships />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          {/* Standalone 3D Wireframe Mesh Background View (No UI, No Text, No Logos) */}
+          <Route path="/wireframe" element={<WireframeLandscape />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="services" element={<Services />} />
+            <Route path="portfolio" element={<Portfolio />} />
+            <Route path="partners" element={<Partners />} />
+            <Route path="hire" element={<Hire />} />
+            <Route path="careers" element={<Careers />} />
+            <Route path="internships" element={<Internships />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

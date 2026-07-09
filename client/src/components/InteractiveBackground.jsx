@@ -37,6 +37,45 @@ const InteractiveBackground = () => {
     };
     window.addEventListener('resize', handleResize);
 
+    if (path === '/' || path === '/home' || path === '/about') {
+      const drawStatic = () => {
+        if (!canvas || !ctx) return;
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        ctx.fillStyle = '#FAFCFF';
+        ctx.fillRect(0, 0, width, height);
+
+        // Subtle top-center sapphire/cyan atmospheric glow
+        const meshGrad = ctx.createRadialGradient(
+          width / 2, height / 4, 0,
+          width / 2, height / 2, width * 0.8
+        );
+        meshGrad.addColorStop(0, 'rgba(37, 99, 235, 0.055)');
+        meshGrad.addColorStop(0.4, 'rgba(56, 189, 248, 0.025)');
+        meshGrad.addColorStop(0.8, 'rgba(249, 115, 22, 0.015)');
+        meshGrad.addColorStop(1, 'rgba(248, 250, 252, 0)');
+        ctx.fillStyle = meshGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Grid (Batched into single path draw)
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.012)';
+        const dotSpacing = 64;
+        ctx.beginPath();
+        for (let x = 0; x < width; x += dotSpacing) {
+          for (let y = 0; y < height; y += dotSpacing) {
+            ctx.rect(x, y, 1, 1);
+          }
+        }
+        ctx.fill();
+      };
+      drawStatic();
+      window.addEventListener('resize', drawStatic);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        window.removeEventListener('resize', drawStatic);
+      };
+    }
+
     // Track Mouse
     const handleMouseMove = (e) => {
       mouseRef.current.x = e.clientX;
@@ -46,11 +85,14 @@ const InteractiveBackground = () => {
     const handleMouseLeave = () => {
       mouseRef.current.active = false;
     };
+    let isTabActive = true;
+    const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     window.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Particles Setup (Page-specific parameters)
-    const particleCount = 35;
+    const particleCount = 18; // Optimized for high-FPS performance across devices
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -96,9 +138,19 @@ const InteractiveBackground = () => {
     ];
 
     let time = 0;
+    let lastFrameTime = 0;
     
     // Animation Loop
-    const draw = () => {
+    const draw = (timestamp) => {
+      if (!isTabActive) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      if (timestamp - lastFrameTime < 33) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = timestamp;
       time += 0.01;
       const scrollY = window.scrollY;
       const parallaxFactor = 0.12;
@@ -147,138 +199,23 @@ const InteractiveBackground = () => {
 
       // --- PAGE-SPECIFIC RENDERING ENGINE ---
       
-      if (path === '/' || path === '/home') {
-        // --- 1. HOME: Animated technology network with floating blobs & grid ---
-        
-        // Grid
-        ctx.fillStyle = 'rgba(37, 99, 235, 0.012)';
-        const dotSpacing = 48;
-        for (let x = (Math.sin(time * 0.01) * 3) % dotSpacing; x < width; x += dotSpacing) {
-          for (let y = -scrollY % dotSpacing; y < height; y += dotSpacing) {
-            ctx.fillRect(x, y, 1, 1);
-          }
-        }
-
-        // Ambient Orbs
-        orbs.forEach((orb) => {
-          if (!reducedMotion) {
-            orb.angle += orb.speed;
-            orb.x += Math.sin(orb.angle) * 0.15;
-            orb.y += Math.cos(orb.angle) * 0.15;
-          }
-          const currentY = orb.y - scrollY * parallaxFactor;
-          const orbGrad = ctx.createRadialGradient(orb.x, currentY, 15, orb.x, currentY, orb.baseRadius);
-          orbGrad.addColorStop(0, orb.color);
-          orbGrad.addColorStop(1, 'rgba(248, 250, 252, 0)');
-          ctx.fillStyle = orbGrad;
-          ctx.beginPath();
-          ctx.arc(orb.x, currentY, orb.baseRadius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        // Connections
-        ctx.lineWidth = 0.35;
-        particles.forEach((p, idx) => {
-          if (!reducedMotion) {
-            p.x += p.vx + Math.sin(time * 0.35 + p.pulseVal) * 0.035;
-            p.y += p.vy;
-            if (p.y < 0) { p.y = height; p.x = Math.random() * width; }
-            if (p.x < 0) p.x = width;
-            if (p.x > width) p.x = 0;
-          }
-
-          // Lines
-          for (let j = idx + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dx = p.x - p2.x;
-            const dy = p.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 115) {
-              const lineAlpha = (1 - dist / 115) * 0.04;
-              ctx.strokeStyle = `rgba(37, 99, 235, ${lineAlpha})`;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-            }
-          }
-
-          // Nodes
-          p.pulseVal += p.pulseSpeed;
-          const currentAlpha = p.alpha + Math.sin(p.pulseVal) * 0.025;
-          ctx.fillStyle = `rgba(37, 99, 235, ${currentAlpha * 0.12})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius * 2.8, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = `rgba(37, 99, 235, ${currentAlpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-      } else if (path === '/about') {
-        // --- 2. ABOUT: Connected technology nodes (pulse node connections) ---
-        ctx.lineWidth = 0.45;
-        
-        // Draw static connections
-        for (let i = 0; i < staticNodes.length; i++) {
-          const n1 = staticNodes[i];
-          const adjY1 = n1.y - scrollY * parallaxFactor;
-          
-          for (let j = i + 1; j < staticNodes.length; j++) {
-            const n2 = staticNodes[j];
-            const adjY2 = n2.y - scrollY * parallaxFactor;
-            const dist = Math.sqrt((n1.x - n2.x) ** 2 + (adjY1 - adjY2) ** 2);
-
-            // Connect if reasonably close
-            if (dist < 320) {
-              const pulse = 0.02 + Math.sin(time * 0.8 + i * 0.5) * 0.02;
-              ctx.strokeStyle = `rgba(37, 99, 235, ${pulse})`;
-              ctx.beginPath();
-              ctx.moveTo(n1.x, adjY1);
-              ctx.lineTo(n2.x, adjY2);
-              ctx.stroke();
-            }
-          }
-        }
-
-        // Draw nodes
-        staticNodes.forEach((node, idx) => {
-          const adjY = node.y - scrollY * parallaxFactor;
-          const pulseRadius = node.radius + Math.sin(time * 1.5 + idx) * 1.2;
-          
-          ctx.fillStyle = 'rgba(37, 99, 235, 0.03)';
-          ctx.beginPath();
-          ctx.arc(node.x, adjY, pulseRadius * 2.5, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = 'rgba(37, 99, 235, 0.25)';
-          ctx.beginPath();
-          ctx.arc(node.x, adjY, node.radius, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-      } else if (path === '/services') {
+      if (path === '/services') {
         // --- 3. SERVICES: Animated grid with moving dots along grid lines ---
         const dotSpacing = 48;
         
-        // Draw prominent light grid
+        // Draw prominent light grid (Batched into single path)
         ctx.strokeStyle = 'rgba(37, 99, 235, 0.015)';
         ctx.lineWidth = 0.5;
+        ctx.beginPath();
         for (let x = 0; x < width; x += dotSpacing) {
-          ctx.beginPath();
           ctx.moveTo(x, 0);
           ctx.lineTo(x, height);
-          ctx.stroke();
         }
         for (let y = -scrollY % dotSpacing; y < height; y += dotSpacing) {
-          ctx.beginPath();
           ctx.moveTo(0, y);
           ctx.lineTo(width, y);
-          ctx.stroke();
         }
+        ctx.stroke();
 
         // Drifting dots along grid coordinates
         particles.forEach((p) => {
@@ -417,6 +354,7 @@ const InteractiveBackground = () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [reducedMotion, path]);
 

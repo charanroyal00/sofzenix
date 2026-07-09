@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -43,7 +43,7 @@ const BackgroundDecorations = () => (
 );
 
 // Pure CSS Device Mockups
-const LaptopMockup = ({ screenshot, title }) => (
+const LaptopMockup = memo(({ screenshot, title }) => (
   <div className="relative w-full max-w-[480px] mx-auto select-none" style={{ perspective: '1000px' }}>
     {/* Screen Outer Frame */}
     <div className="bg-[#1f2937] border-[10px] border-[#111827] rounded-t-2xl shadow-[0_15px_35px_rgba(0,0,0,0.06)] overflow-hidden aspect-[16/10] flex flex-col relative">
@@ -51,7 +51,7 @@ const LaptopMockup = ({ screenshot, title }) => (
       {/* Screen Display */}
       <div className="w-full h-full bg-[#F8FAFC] relative flex items-center justify-center p-1">
         {screenshot ? (
-          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded-[6px]" />
+          <img src={screenshot} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover rounded-[6px]" />
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#2563EB] mb-2">{title}</span>
@@ -65,9 +65,9 @@ const LaptopMockup = ({ screenshot, title }) => (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[#111827] rounded-b" /> {/* Notch */}
     </div>
   </div>
-);
+));
 
-const PhoneMockup = ({ screenshot, title }) => (
+const PhoneMockup = memo(({ screenshot, title }) => (
   <div className="relative w-full max-w-[190px] mx-auto select-none">
     <div className="bg-[#111827] rounded-[36px] p-2.5 shadow-[0_20px_45px_rgba(0,0,0,0.12)] border-[3px] border-gray-800 aspect-[9/19] flex flex-col relative overflow-hidden">
       {/* Notch */}
@@ -76,27 +76,27 @@ const PhoneMockup = ({ screenshot, title }) => (
       </div>
       {/* Screen Display */}
       <div className="w-full h-full bg-white rounded-[26px] overflow-hidden relative border border-black/5">
-        <img src={screenshot} alt={title} className="w-full h-full object-cover" />
+        <img src={screenshot} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
       </div>
     </div>
   </div>
-);
+));
 
-const DesktopMonitorMockup = ({ screenshot, title }) => (
+const DesktopMonitorMockup = memo(({ screenshot, title }) => (
   <div className="relative w-full max-w-[480px] mx-auto select-none flex flex-col items-center">
     {/* Screen Frame */}
     <div className="bg-[#111827] p-2 rounded-t-2xl border border-gray-800 shadow-[0_20px_45px_rgba(0,0,0,0.08)] w-full aspect-[16/10] overflow-hidden relative">
       <div className="w-full h-full bg-white rounded-lg overflow-hidden relative">
-        <img src={screenshot} alt={title} className="w-full h-full object-cover" />
+        <img src={screenshot} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
       </div>
     </div>
     {/* Monitor Stand */}
     <div className="w-16 h-8 bg-[#374151] border-l border-r border-gray-700 shadow-sm" />
     <div className="w-36 h-2 bg-[#1f2937] rounded-full shadow-md" />
   </div>
-);
+));
 
-const BrowserMockup = ({ screenshot, title }) => (
+const BrowserMockup = memo(({ screenshot, title }) => (
   <div className="relative w-full max-w-[480px] mx-auto select-none bg-[#111827] rounded-2xl border border-gray-800 shadow-[0_20px_45px_rgba(0,0,0,0.08)] overflow-hidden aspect-[16/10] flex flex-col">
     {/* Window Controls Header */}
     <div className="h-7 px-3 bg-gray-950 border-b border-gray-800 flex items-center gap-1.5 shrink-0">
@@ -109,10 +109,10 @@ const BrowserMockup = ({ screenshot, title }) => (
     </div>
     {/* Display Screen */}
     <div className="w-full h-full bg-white overflow-hidden relative">
-      <img src={screenshot} alt={title} className="w-full h-full object-cover" />
+      <img src={screenshot} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
     </div>
   </div>
-);
+));
 
 const getTagStyle = (tag) => {
   const brandColors = [

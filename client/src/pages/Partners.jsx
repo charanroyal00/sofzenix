@@ -416,6 +416,8 @@ const Partners = () => {
                           ) : partner.logo ? (
                             <img 
                               src={partner.logo} 
+                              loading="lazy"
+                              decoding="async"
                               onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
                               alt={`${partner.name} logo`} 
                               className="h-full w-auto object-contain max-w-full select-none"

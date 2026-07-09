@@ -31,9 +31,9 @@ const FancyHeroBackground = ({ mouseX, mouseY }) => {
     const isMobile = width < 768;
     const isTablet = width >= 768 && width < 1024;
 
-    // Ultra-dense grid for maximum visual impact
-    const meshCols = isMobile ? 48 : isTablet ? 72 : 96;
-    const meshRows = isMobile ? 32 : isTablet ? 48 : 64;
+    // Ultra-dense grid optimized for buttery-smooth performance
+    const meshCols = isMobile ? 24 : isTablet ? 36 : 48;
+    const meshRows = isMobile ? 16 : isTablet ? 24 : 32;
 
     let time = 0;
     let parallaxX = 0;
@@ -43,9 +43,15 @@ const FancyHeroBackground = ({ mouseX, mouseY }) => {
     const handleVisibilityChange = () => { isTabActive = !document.hidden; };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas.parentElement) observer.observe(canvas.parentElement);
+
     // Floating particles for extra fancy effect
     const particles = [];
-    const particleCount = isMobile ? 30 : 50;
+    const particleCount = isMobile ? 15 : 25;
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
@@ -59,7 +65,7 @@ const FancyHeroBackground = ({ mouseX, mouseY }) => {
 
     // ─── RENDER LOOP ───
     const render = () => {
-      if (!isTabActive) { rafId = requestAnimationFrame(render); return; }
+      if (!isTabActive || !isIntersecting) { rafId = requestAnimationFrame(render); return; }
 
       time += reducedMotion ? 0.0005 : 0.004;
       ctx.clearRect(0, 0, width, height);
@@ -355,6 +361,7 @@ const FancyHeroBackground = ({ mouseX, mouseY }) => {
 
     return () => {
       cancelAnimationFrame(rafId);
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };

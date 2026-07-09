@@ -96,7 +96,23 @@ const StackBackgroundParticles = () => {
       });
     }
 
-    const draw = () => {
+    let isIntersecting = true;
+    const observer = new IntersectionObserver(([entry]) => {
+      isIntersecting = entry.isIntersecting;
+    }, { threshold: 0 });
+    if (canvas) observer.observe(canvas);
+
+    let lastFrameTime = 0;
+    const draw = (timestamp) => {
+      if (!isIntersecting || document.hidden) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      if (timestamp - lastFrameTime < 33) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTime = timestamp;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = 'rgba(37, 99, 235, 0.1)';
       particles.forEach(p => {
@@ -116,10 +132,11 @@ const StackBackgroundParticles = () => {
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
+      if (observer) observer.disconnect();
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0 translate-z-0" />;
 };
 
 const techData = [

@@ -108,11 +108,6 @@ const Hero = () => {
   // Brightness: 100% -> 95%
   const heroScale = useTransform(scrollY, [0, 500], [1, 0.98]);
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.90]);
-  const heroFilter = useTransform(
-    scrollY,
-    [0, 500],
-    ["brightness(100%)", "brightness(95%)"]
-  );
 
   const slideUp  = useTransform(scrollY, [0, 500], [0, -20]);
 
@@ -122,8 +117,12 @@ const Hero = () => {
     return () => window.removeEventListener('resize', h);
   }, []);
 
+  let lastMove = 0;
   const onMove = (e) => {
     if (mobile || !sectionRef.current) return;
+    const now = Date.now();
+    if (now - lastMove < 30) return; // Throttle mouse spring updates to ~30 FPS
+    lastMove = now;
     const r = sectionRef.current.getBoundingClientRect();
     mX.set(e.clientX - r.left - r.width / 2);
     mY.set(e.clientY - r.top - r.height / 2);
@@ -138,10 +137,9 @@ const Hero = () => {
       onMouseLeave={() => { mX.set(0); mY.set(0); }}
       style={{
         scale: heroScale,
-        opacity: heroOpacity,
-        filter: heroFilter
+        opacity: heroOpacity
       }}
-      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-white transition-all duration-300"
+      className="relative w-full min-h-[100svh] flex flex-col items-center justify-center pt-24 pb-14 px-5 md:px-10 overflow-hidden bg-white transition-all duration-300 translate-z-0"
     >
       {/* ── MODERN MESH WAVE BACKGROUND ── */}
       <ModernMeshBackground mouseX={sX} mouseY={sY} />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaCloud, FaCode, FaDatabase, FaCogs, FaBrain, FaGraduationCap } from 'react-icons/fa';
@@ -31,7 +31,7 @@ const ecosystem = [
 
 const categories = ['All', 'Cloud', 'Development', 'Database', 'Enterprise', 'AI', 'Education'];
 
-const PartnersSection = () => {
+const PartnersSection = memo(() => {
   const [activeTab, setActiveTab] = useState('All');
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -105,7 +105,7 @@ const PartnersSection = () => {
                     {IconComponent ? (
                       <IconComponent className="text-3xl" />
                     ) : item.logo ? (
-                      <img src={item.logo} onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} alt={item.name} className="max-h-8 max-w-[80%] object-contain" />
+                      <img src={item.logo} loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} alt={item.name} className="max-h-8 max-w-[80%] object-contain" />
                     ) : (
                       <span className="text-[10px] font-black uppercase text-[#2563EB] text-center px-1 truncate">
                         {item.textLogo}
@@ -139,6 +139,6 @@ const PartnersSection = () => {
       </div>
     </section>
   );
-};
+});
 
 export default PartnersSection;

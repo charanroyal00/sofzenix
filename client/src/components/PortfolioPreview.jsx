@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -11,7 +11,7 @@ import {
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6';
 
 // Pure CSS Device Mockup
-const LaptopMockup = ({ screenshot, title }) => (
+const LaptopMockup = memo(({ screenshot, title }) => (
   <div className="relative w-full max-w-[480px] mx-auto select-none" style={{ perspective: '1000px' }}>
     {/* Screen Outer Frame */}
     <div className="bg-[#1f2937] border-[10px] border-[#111827] rounded-t-2xl shadow-[0_15px_35px_rgba(0,0,0,0.06)] overflow-hidden aspect-[16/10] flex flex-col relative">
@@ -19,7 +19,7 @@ const LaptopMockup = ({ screenshot, title }) => (
       {/* Screen Display */}
       <div className="w-full h-full bg-[#F8FAFC] relative flex items-center justify-center p-2">
         {screenshot ? (
-          <img src={screenshot} alt={title} className="w-full h-full object-cover rounded" />
+          <img src={screenshot} alt={title} loading="lazy" decoding="async" className="w-full h-full object-cover rounded" />
         ) : (
           <div className="flex flex-col items-center justify-center text-center p-4">
             <span className="text-xs font-black uppercase tracking-widest text-[#2563EB] mb-2">{title}</span>
@@ -33,7 +33,7 @@ const LaptopMockup = ({ screenshot, title }) => (
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-[#111827] rounded-b" /> {/* Notch */}
     </div>
   </div>
-);
+));
 
 const getTagStyle = (tag) => {
   const brandColors = [
