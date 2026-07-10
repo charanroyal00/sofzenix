@@ -295,7 +295,7 @@ const ContactSection = () => {
                 +91 63058-18324
               </a>
               <p className="text-gray-500">
-                Telangana, Hyderabad-500032
+                0-00, Narasaraopet - Guntur Rd, Arundelpet, Narasaraopeta, Andhra Pradesh 522601
               </p>
             </div>
           </div>

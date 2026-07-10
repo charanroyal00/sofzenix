@@ -547,7 +547,7 @@ const Contact = () => {
             <div 
               className="w-full h-full"
               dangerouslySetInnerHTML={{
-                __html: `<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.410940348744!2d78.3820295!3d17.4395646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb93dc8c5d69df%3A0x19df44e42c20cf5!2sMadhapur%2C%20Hyderabad%2C%20Telangana%20500081!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`
+                __html: `<iframe src="https://maps.google.com/maps?q=Sofzenix%20IT%20Solutions%20LLP,%20Narasaraopeta&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`
               }}
             />
           </div>
@@ -558,10 +558,10 @@ const Contact = () => {
               <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest mb-1.5 block">Location</span>
               <h3 className="text-lg font-bold text-[#0F172A] mb-2">Office Address</h3>
               <p className="text-[#475569] text-xs font-semibold leading-relaxed mb-4">
-                Madhapur IT Hub, Telangana, Hyderabad-500032, India.
+                0-00, Narasaraopet - Guntur Rd, Arundelpet, Narasaraopeta, Andhra Pradesh 522601
               </p>
               <button 
-                onClick={() => window.open('https://maps.google.com/?q=Madhapur+Hyderabad+Telangana', '_blank')}
+                onClick={() => window.open('https://www.google.com/maps/search/?api=1&query=Sofzenix+IT+Solutions+LLP+Narasaraopeta', '_blank')}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#F8FAFC] border border-gray-200/60 text-[#0F172A] font-bold text-xs hover:border-[#2563EB] hover:text-[#2563EB] transition-colors cursor-pointer w-fit select-none"
               >
                 <span>Directions Button</span>
@@ -573,7 +573,7 @@ const Contact = () => {
               <span className="text-[10px] font-bold text-[#2563EB] uppercase tracking-widest mb-1.5 block">Access</span>
               <h3 className="text-lg font-bold text-[#0F172A] mb-2">Nearby Landmark</h3>
               <p className="text-[#475569] text-xs font-semibold leading-relaxed">
-                Located 500m from Madhapur Metro Station. Just behind the Hitech City main flyover.
+                Located on Narasaraopet - Guntur Road, Arundelpet, near Saibaba Temple, Narasaraopeta.
               </p>
             </div>
 
@@ -581,7 +581,7 @@ const Contact = () => {
               <span className="text-[10px] font-bold text-[#10B981] uppercase tracking-widest mb-1.5 block">Parking</span>
               <h3 className="text-lg font-bold text-[#0F172A] mb-2">Parking Information</h3>
               <p className="text-[#475569] text-xs font-semibold leading-relaxed">
-                Free Visitor Parking Available in the basement. Valet parking on request during business hours.
+                Visitor parking is available on-site. Roadside parking is also accessible during business hours.
               </p>
             </div>
           </div>
@@ -616,7 +616,7 @@ const Contact = () => {
 
             <div className="flex flex-col gap-1.5 lg:mt-4">
               <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Registered Address</span>
-              <span className="text-sm font-bold text-[#0F172A]">Telangana, Hyderabad-500032</span>
+              <span className="text-sm font-bold text-[#0F172A]">0-00, Narasaraopet - Guntur Rd, Arundelpet, Narasaraopeta, Andhra Pradesh 522601</span>
             </div>
 
             <div className="flex flex-col gap-1.5 lg:mt-4">

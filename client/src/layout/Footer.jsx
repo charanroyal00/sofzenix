@@ -191,7 +191,7 @@ const Footer = () => {
           <ul className="flex flex-col gap-3 text-xs font-semibold text-[#334155]">
             <li className="flex items-start gap-2 group transition-all duration-300 cursor-default">
               <FaMapMarkerAlt className="text-[#F97316] mt-0.5 transition-transform duration-300 group-hover:scale-110 shrink-0" />
-              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">Telangana,Hyderabad-500032</span>
+              <span className="transition-colors duration-300 group-hover:text-[#2563EB]">0-00, Guntur Rd, Arundelpet, Narasaraopeta, AP - 522601</span>
             </li>
             <li className="flex items-center gap-2 group transition-all duration-300 cursor-default">
               <FaPhoneAlt className="text-[#2563EB] transition-transform duration-300 group-hover:scale-110 shrink-0" />

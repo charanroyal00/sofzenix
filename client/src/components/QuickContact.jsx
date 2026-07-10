@@ -83,7 +83,7 @@ const QuickContact = () => {
               <div className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-[#2563EB] text-base mt-1" />
                 <span className="text-[#475569] text-sm font-semibold">
-                  Telangana, Hyderabad-500032
+                  0-00, Narasaraopet - Guntur Rd, Arundelpet, Narasaraopeta, Andhra Pradesh 522601
                 </span>
               </div>
 
