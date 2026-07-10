@@ -174,12 +174,7 @@ const Header = () => {
               </span>
             </Link>
 
-            <Link
-              to="/login"
-              className="px-4 py-1.5 rounded-full text-[11.5px] font-bold text-white bg-gradient-to-r from-[#2563EB] to-[#F97316] hover:from-[#F97316] hover:to-[#2563EB] flex items-center justify-center select-none transition-all duration-300 shadow-sm cursor-pointer hover:scale-[1.03] hover:shadow-[0_0_20px_rgba(37,99,235,0.35)] active:scale-[0.97] whitespace-nowrap"
-            >
-              Login
-            </Link>
+
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -250,12 +245,6 @@ const Header = () => {
                   className="w-full text-center py-2.5 rounded-full bg-[#F3F8FF] border border-[#2563EB]/15 text-[#0F172A] font-semibold hover:bg-[#2563EB]/5 transition-all duration-300"
                 >
                   Verify
-                </Link>
-                <Link
-                  to="/login"
-                  className="w-full text-center py-2.5 rounded-full text-white font-semibold bg-gradient-to-r from-[#2563EB] to-[#F97316]"
-                >
-                  Login
                 </Link>
 
                 {/* Mobile Social Menu */}

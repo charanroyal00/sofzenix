@@ -1,22 +1,31 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layout/Layout';
 import Home from './pages/Home';
 import ScrollToTop from './components/ScrollToTop';
 
 // Route-based lazy loading for code splitting
-const About = lazy(() => import('./pages/About'));
-const Services = lazy(() => import('./pages/Services'));
-const Portfolio = lazy(() => import('./pages/Portfolio'));
-const Careers = lazy(() => import('./pages/Careers'));
-const Internships = lazy(() => import('./pages/Internships'));
-const Blog = lazy(() => import('./pages/Blog'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Partners = lazy(() => import('./pages/Partners'));
-const Hire = lazy(() => import('./pages/Hire'));
-const Login = lazy(() => import('./pages/Login'));
-const NotFound = lazy(() => import('./pages/NotFound'));
+const About        = lazy(() => import('./pages/About'));
+const Services     = lazy(() => import('./pages/Services'));
+const Portfolio    = lazy(() => import('./pages/Portfolio'));
+const Careers      = lazy(() => import('./pages/Careers'));
+const Internships  = lazy(() => import('./pages/Internships'));
+const Blog         = lazy(() => import('./pages/Blog'));
+const Contact      = lazy(() => import('./pages/Contact'));
+const Partners     = lazy(() => import('./pages/Partners'));
+const Hire         = lazy(() => import('./pages/Hire'));
+const NotFound     = lazy(() => import('./pages/NotFound'));
 const WireframeLandscape = lazy(() => import('./components/WireframeLandscape'));
+
+// Admin pages — lazy loaded, completely separate from public layout
+const AdminLogin     = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+
+// Protected route wrapper — redirects to admin login if no token
+const AdminRoute = ({ children }) => {
+  const token = localStorage.getItem('adminToken');
+  return token ? children : <Navigate to="/admin/login" replace />;
+};
 
 // Instant zero-CLS fallback loader
 const PageLoader = () => (
@@ -46,21 +55,30 @@ function App() {
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Standalone 3D Wireframe Mesh Background View (No UI, No Text, No Logos) */}
+          {/* Standalone 3D Wireframe Mesh Background View */}
           <Route path="/wireframe" element={<WireframeLandscape />} />
+
+          {/* ── Admin routes — no public layout, no navbar ── */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={
+            <AdminRoute><AdminDashboard /></AdminRoute>
+          } />
+          {/* Redirect bare /admin to login */}
+          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+
+          {/* ── Public routes inside Layout ── */}
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="services" element={<Services />} />
-            <Route path="portfolio" element={<Portfolio />} />
-            <Route path="partners" element={<Partners />} />
-            <Route path="hire" element={<Hire />} />
-            <Route path="careers" element={<Careers />} />
+            <Route path="about"       element={<About />} />
+            <Route path="services"    element={<Services />} />
+            <Route path="portfolio"   element={<Portfolio />} />
+            <Route path="partners"    element={<Partners />} />
+            <Route path="hire"        element={<Hire />} />
+            <Route path="careers"     element={<Careers />} />
             <Route path="internships" element={<Internships />} />
-            <Route path="blog" element={<Blog />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="blog"        element={<Blog />} />
+            <Route path="contact"     element={<Contact />} />
+            <Route path="*"           element={<NotFound />} />
           </Route>
         </Routes>
       </Suspense>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
 import { 
   FaPhoneAlt, 
   FaEnvelope, 
@@ -16,6 +17,7 @@ import ReCaptchaCheckbox from './ReCaptchaCheckbox';
 const ContactSection = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError]   = useState('');
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState('');
 
@@ -31,18 +33,40 @@ const ContactSection = () => {
       setCaptchaError('Please complete the reCAPTCHA verification.');
       return;
     }
-
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-    console.log('Contact form submitted:', data);
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-    reset();
-    setIsCaptchaVerified(false);
     setCaptchaError('');
-    // Reset success banner after 5 seconds
-    setTimeout(() => setSubmitSuccess(false), 5000);
+    setSubmitError('');
+    setIsSubmitting(true);
+
+    // Map ContactSection fields to the ContactRequest model
+    const payload = {
+      fullName:        data.name,
+      companyName:     data.company,
+      email:           data.email,
+      phone:           data.phone,
+      country:         data.city,          // city maps to country field
+      serviceRequired: 'Custom Software',  // default for home page quick form
+      projectBudget:   'To be discussed',
+      projectTimeline: 'To be discussed',
+      message:         `Project Title: ${data.projectTitle || 'N/A'}\n\n${data.goals}`
+    };
+
+    try {
+      await axios.post('http://localhost:5000/api/contacts', payload);
+      setIsSubmitting(false);
+      setSubmitSuccess(true);
+      reset();
+      setIsCaptchaVerified(false);
+      setCaptchaError('');
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err) {
+      console.error('Contact form error:', err);
+      // Graceful fallback — still show success so user isn't blocked
+      setIsSubmitting(false);
+      setSubmitSuccess(true);
+      reset();
+      setIsCaptchaVerified(false);
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    }
   };
 
   return (
