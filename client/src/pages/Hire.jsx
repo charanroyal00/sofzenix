@@ -61,6 +61,7 @@ const Hire = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState('');
   const [selectedTechs, setSelectedTechs] = useState([]);
@@ -108,45 +109,38 @@ const Hire = () => {
     setCaptchaError('');
     setIsSubmitting(true);
 
+    // Map Hire fields to the FormSubmit payload
     const payload = {
-      fullName: data.name,
-      company: data.company,
-      email: data.email,
-      phone: data.phone,
-      country: data.country,
-      techNeeded: selectedTechs,
-      hiringModel: data.hiringModel,
-      projectDuration: data.projectDuration,
+      fullName:            data.name,
+      company:             data.company,
+      email:               data.email,
+      phone:               data.phone,
+      country:             data.country,
+      techNeeded:          selectedTechs.join(', '), // format array of techs
+      hiringModel:         data.hiringModel,
+      projectDuration:     data.projectDuration,
       projectRequirements: data.requirements,
-      agreedToPrivacy: data.agreedToPrivacy
+      agreedToPrivacy:     data.agreedToPrivacy ? 'Yes' : 'No',
+      _subject:            'New Hiring Request from Website Hire Page',
+      _captcha:            'false',
+      _template:           'box'
     };
 
     try {
-      // Backend target
-      const res = await axios.post('http://localhost:5000/api/hiring-requests', payload);
-      
+      await axios.post('https://formsubmit.co/ajax/contact@sofzenix.in', payload);
       setIsSubmitting(false);
       setSubmitSuccess(true);
-      setSubmitMessage(res.data.message || 'Thank you! Your hiring request has been received.');
+      setSubmitMessage('Thank you! Your hiring request has been received successfully. We will get back to you within 24 hours!');
+      setSubmitError('');
       reset();
       setSelectedTechs([]);
       setIsCaptchaVerified(false);
-      
-      // Auto dismiss success banner after 8s
       setTimeout(() => setSubmitSuccess(false), 8000);
     } catch (err) {
-      console.warn('Backend API request failed, falling back to simulated success for visual presentation:', err);
-      // Simulate network request delays
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      console.error('Hiring request submission failed:', err);
       setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setSubmitMessage('Hiring request received successfully (local sandbox mode). We will get back to you within 24 hours!');
-      reset();
-      setSelectedTechs([]);
-      setIsCaptchaVerified(false);
-      
-      setTimeout(() => setSubmitSuccess(false), 8000);
+      setSubmitError('Unable to submit your hiring request. Please check your network connection and try again.');
+      setTimeout(() => setSubmitError(''), 6000);
     }
   };
 
@@ -836,6 +830,21 @@ const Hire = () => {
               >
                 <span>🎉 Proposal Sent Successfully!</span>
                 <span className="text-xs font-semibold text-gray-500">{submitMessage}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Error Banner Alert */}
+          <AnimatePresence>
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="mt-6 p-5 rounded-xl bg-red-50/10 border border-red-500/30 text-red-600 text-sm font-bold text-center flex flex-col gap-1 shadow-md select-none"
+              >
+                <span>⚠️ Submission Failed</span>
+                <span className="text-xs font-semibold text-gray-500">{submitError}</span>
               </motion.div>
             )}
           </AnimatePresence>

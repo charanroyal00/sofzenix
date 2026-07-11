@@ -32,7 +32,14 @@ import {
   FaUniversity,
   FaFileUpload,
   FaJava,
-  FaAws
+  FaAws,
+  FaSearchDollar,
+  FaBullhorn,
+  FaUserTie,
+  FaHashtag,
+  FaCalendarAlt,
+  FaCalculator,
+  FaPalette
 } from 'react-icons/fa';
 import {
   SiReact,
@@ -716,6 +723,55 @@ const servicesData = [
     desc: 'Proactive software security patches, performance tuning, and 24/7 emergency support.',
     icon: FaHeadset,
     features: ['24/7 SLA availability', 'Proactive Server Audits', 'Continuous package upgrades']
+  },
+  {
+    title: 'SEO Management',
+    category: 'Digital Marketing',
+    desc: 'End-to-end search engine optimization strategies that improve organic rankings, drive qualified traffic, and increase online visibility across Google and Bing.',
+    icon: FaSearchDollar,
+    features: ['On-page & Off-page SEO', 'Technical SEO Audits', 'Keyword Research & Mapping', 'Link Building Campaigns']
+  },
+  {
+    title: 'Performance Marketing',
+    category: 'Digital Marketing',
+    desc: 'Data-driven paid advertising campaigns across Google Ads, Meta, and LinkedIn optimized for measurable ROI — you pay for results, not impressions.',
+    icon: FaBullhorn,
+    features: ['Google & Meta Ads', 'Conversion Rate Optimization', 'A/B Split Testing', 'ROAS Tracking & Reporting']
+  },
+  {
+    title: 'Influencer Marketing',
+    category: 'Digital Marketing',
+    desc: 'Strategic influencer discovery, campaign coordination, and performance tracking to amplify brand reach through authentic creator partnerships.',
+    icon: FaUserTie,
+    features: ['Influencer Discovery & Vetting', 'Campaign Brief Management', 'Content Review & Approval', 'ROI & Engagement Analytics']
+  },
+  {
+    title: 'Social Media Marketing',
+    category: 'Digital Marketing',
+    desc: 'Full-funnel social media advertising and organic growth strategies across Instagram, Facebook, LinkedIn, and YouTube to build engaged audiences.',
+    icon: FaHashtag,
+    features: ['Platform-specific Strategy', 'Paid Social Campaigns', 'Audience Targeting & Retargeting', 'Growth & Reach Analytics']
+  },
+  {
+    title: 'Branding & Graphic Designing',
+    category: 'Creative Design',
+    desc: 'Comprehensive brand identity creation including logos, typography, color systems, and visual assets that communicate your brand story with clarity and impact.',
+    icon: FaPalette,
+    features: ['Logo & Identity Design', 'Brand Style Guides', 'Marketing Collateral', 'Packaging & Print Design']
+  },
+  {
+    title: 'Social Media Management',
+    category: 'Digital Marketing',
+    desc: 'Consistent day-to-day management of your social media presence — content calendars, post scheduling, community engagement, and monthly performance reports.',
+    icon: FaCalendarAlt,
+    features: ['Content Calendar Planning', 'Post Scheduling & Publishing', 'Community Engagement', 'Monthly Performance Reports']
+  },
+  {
+    title: 'Chartered Accountant (CA) Services',
+    category: 'Financial & Compliance',
+    desc: 'Professional CA services covering GST filing, ITR preparation, company registration, financial audits, and compliance consulting for startups and enterprises.',
+    icon: FaCalculator,
+    features: ['GST Filing & Compliance', 'ITR & Tax Preparation', 'Company Registration', 'Financial Audit & Advisory']
   }
 ];
 

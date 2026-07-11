@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock, FaBolt } from 'react-icons/fa';
+import axios from 'axios';
 import ReCaptchaCheckbox from './ReCaptchaCheckbox';
 
 const QuickContact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState('');
 
@@ -24,16 +26,33 @@ const QuickContact = () => {
     }
 
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log('Quick contact form submitted:', data);
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-    reset();
-    setIsCaptchaVerified(false);
-    setCaptchaError('');
-    // Hide success alert after 5 seconds
-    setTimeout(() => setSubmitSuccess(false), 5000);
+    
+    // Map fields to the FormSubmit payload
+    const payload = {
+      fullName:        data.name,
+      email:           data.email,
+      phone:           data.phone,
+      message:         data.message,
+      _subject:        'New Quick Contact Request',
+      _captcha:        'false',
+      _template:       'box'
+    };
+
+    try {
+      await axios.post('https://formsubmit.co/ajax/contact@sofzenix.in', payload);
+      setIsSubmitting(false);
+      setSubmitSuccess(true);
+      setSubmitError('');
+      reset();
+      setIsCaptchaVerified(false);
+      setCaptchaError('');
+      setTimeout(() => setSubmitSuccess(false), 5000);
+    } catch (err) {
+      console.error('Quick contact submission failed:', err);
+      setIsSubmitting(false);
+      setSubmitError('Failed to send request. Please try again.');
+      setTimeout(() => setSubmitError(''), 6000);
+    }
   };
 
   return (
@@ -199,6 +218,21 @@ const QuickContact = () => {
                 >
                   <span>🎉 Quick Request Sent!</span>
                   <span className="text-gray-500 font-semibold">We will respond within 24 hours.</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Error Alert Banner */}
+            <AnimatePresence>
+              {submitError && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 text-xs font-bold text-center flex flex-col gap-0.5 shadow-md select-none"
+                >
+                  <span>⚠️ Submission Failed</span>
+                  <span className="text-gray-500 font-semibold">{submitError}</span>
                 </motion.div>
               )}
             </AnimatePresence>

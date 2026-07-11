@@ -3,6 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const testimonials = [
   {
+    name: 'Jashwanth reddy Nagireddy',
+    designation: 'Verified Client',
+    company: 'Google Reviews',
+    rating: 5,
+    text: 'As a client of SOFT-TECH Solution, I am truly impressed with the level of professionalism, technical expertise, and customer support they offer. Their team has a deep understanding of IT services, and they were able to provide us with customized, cost-effective solutions that perfectly matched our business needs. What stands out is their ability to deliver fast and reliable IT services — from bulk SMS and email solutions to domain services, cloud communication, IVR systems, and WhatsApp messaging. They offer a wide range of services under one roof, which makes managing our IT operations much easier.',
+    avatarColor: 'from-[#F97316] to-[#EA580C]'
+  },
+  {
+    name: 'Shaik Dastagiri basha',
+    designation: 'Verified Client',
+    company: 'Google Reviews',
+    rating: 5,
+    text: 'Sofzenix IT Solutions provided great service and support. The staff were friendly and helpful throughout. Thank you for the excellent guidance!',
+    avatarColor: 'from-[#2563EB] to-[#1D4ED8]'
+  },
+  {
     name: 'Sarah Jenkins',
     designation: 'Chief Technology Officer',
     company: 'Fintech Solutions Corp',

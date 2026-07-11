@@ -17,16 +17,6 @@ const Hire         = lazy(() => import('./pages/Hire'));
 const NotFound     = lazy(() => import('./pages/NotFound'));
 const WireframeLandscape = lazy(() => import('./components/WireframeLandscape'));
 
-// Admin pages — lazy loaded, completely separate from public layout
-const AdminLogin     = lazy(() => import('./pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-
-// Protected route wrapper — redirects to admin login if no token
-const AdminRoute = ({ children }) => {
-  const token = localStorage.getItem('adminToken');
-  return token ? children : <Navigate to="/admin/login" replace />;
-};
-
 // Instant zero-CLS fallback loader
 const PageLoader = () => (
   <div className="min-h-[70vh] w-full flex items-center justify-center p-8">
@@ -58,13 +48,7 @@ function App() {
           {/* Standalone 3D Wireframe Mesh Background View */}
           <Route path="/wireframe" element={<WireframeLandscape />} />
 
-          {/* ── Admin routes — no public layout, no navbar ── */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={
-            <AdminRoute><AdminDashboard /></AdminRoute>
-          } />
-          {/* Redirect bare /admin to login */}
-          <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+
 
           {/* ── Public routes inside Layout ── */}
           <Route path="/" element={<Layout />}>

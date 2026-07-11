@@ -34,6 +34,7 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
   const [captchaError, setCaptchaError] = useState('');
   const [fileAttachment, setFileAttachment] = useState(null);
@@ -96,41 +97,38 @@ const Contact = () => {
     setCaptchaError('');
     setIsSubmitting(true);
 
+    // Map Contact fields to the FormSubmit payload
     const payload = {
-      fullName: data.fullName,
-      companyName: data.companyName,
-      email: data.email,
-      phone: data.phone,
-      country: data.country,
+      fullName:        data.fullName,
+      companyName:     data.companyName,
+      email:           data.email,
+      phone:           data.phone,
+      country:         data.country,
       serviceRequired: data.serviceRequired,
-      projectBudget: data.projectBudget,
+      projectBudget:   data.projectBudget,
       projectTimeline: data.projectTimeline,
-      message: data.message,
-      attachment: fileAttachment
+      message:         data.message,
+      attachment:      fileAttachment ? fileAttachment.fileData : undefined, // pass base64 attachment if exists
+      _subject:        'New Contact Inquiry from Website Contact Page',
+      _captcha:        'false',
+      _template:       'box'
     };
 
     try {
-      const res = await axios.post('http://localhost:5000/api/contacts', payload);
+      await axios.post('https://formsubmit.co/ajax/contact@sofzenix.in', payload);
       setIsSubmitting(false);
       setSubmitSuccess(true);
-      setSubmitMessage(res.data.message || 'Thank you! Your message has been received.');
+      setSubmitMessage('Thank you! Your message has been received successfully. We will get back to you shortly!');
+      setSubmitError('');
       reset();
       setFileAttachment(null);
       setIsCaptchaVerified(false);
-      
       setTimeout(() => setSubmitSuccess(false), 8000);
     } catch (err) {
-      console.warn('Backend contact request failed, using sandbox fallback mode:', err);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      console.error('Contact submission failed:', err);
       setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setSubmitMessage('Your message has been received successfully (local sandbox mode). We will get back to you shortly!');
-      reset();
-      setFileAttachment(null);
-      setIsCaptchaVerified(false);
-      
-      setTimeout(() => setSubmitSuccess(false), 8000);
+      setSubmitError('Unable to submit your message. Please check your network and try again.');
+      setTimeout(() => setSubmitError(''), 6000);
     }
   };
 
@@ -513,6 +511,21 @@ const Contact = () => {
               >
                 <span>🎉 Message Sent Successfully!</span>
                 <span className="text-xs font-semibold text-gray-500">{submitMessage}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Form Error Animation */}
+          <AnimatePresence>
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                className="mt-6 p-5 rounded-xl bg-red-50/10 border border-red-500/30 text-red-600 text-sm font-bold text-center flex flex-col gap-1 shadow-md select-none"
+              >
+                <span>⚠️ Submission Failed</span>
+                <span className="text-xs font-semibold text-gray-500">{submitError}</span>
               </motion.div>
             )}
           </AnimatePresence>

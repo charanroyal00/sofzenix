@@ -37,7 +37,7 @@ const ContactSection = () => {
     setSubmitError('');
     setIsSubmitting(true);
 
-    // Map ContactSection fields to the ContactRequest model
+    // Map ContactSection fields to the FormSubmit payload
     const payload = {
       fullName:        data.name,
       companyName:     data.company,
@@ -47,25 +47,26 @@ const ContactSection = () => {
       serviceRequired: 'Custom Software',  // default for home page quick form
       projectBudget:   'To be discussed',
       projectTimeline: 'To be discussed',
-      message:         `Project Title: ${data.projectTitle || 'N/A'}\n\n${data.goals}`
+      message:         `Project Title: ${data.projectTitle || 'N/A'}\n\n${data.goals}`,
+      _subject:        'New Quick Contact Inquiry from Home Page',
+      _captcha:        'false',
+      _template:       'box'
     };
 
     try {
-      await axios.post('http://localhost:5000/api/contacts', payload);
+      await axios.post('https://formsubmit.co/ajax/contact@sofzenix.in', payload);
       setIsSubmitting(false);
       setSubmitSuccess(true);
+      setSubmitError('');
       reset();
       setIsCaptchaVerified(false);
       setCaptchaError('');
       setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (err) {
-      console.error('Contact form error:', err);
-      // Graceful fallback — still show success so user isn't blocked
+      console.error('Contact form submission failed:', err);
       setIsSubmitting(false);
-      setSubmitSuccess(true);
-      reset();
-      setIsCaptchaVerified(false);
-      setTimeout(() => setSubmitSuccess(false), 5000);
+      setSubmitError('Unable to submit form. Please check your internet connection and try again.');
+      setTimeout(() => setSubmitError(''), 6000);
     }
   };
 
@@ -243,6 +244,21 @@ const ContactSection = () => {
                 >
                   <span>🎉 Proposal Sent Successfully!</span>
                   <span className="text-xs font-semibold text-gray-500">We will review your requirements and respond within 24 hours.</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Error Alert Banner */}
+            <AnimatePresence>
+              {submitError && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 text-sm font-bold text-center flex flex-col gap-1 shadow-md select-none"
+                >
+                  <span>⚠️ Submission Failed</span>
+                  <span className="text-xs font-semibold text-gray-500">{submitError}</span>
                 </motion.div>
               )}
             </AnimatePresence>
