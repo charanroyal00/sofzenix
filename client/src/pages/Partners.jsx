@@ -214,13 +214,39 @@ const Partners = () => {
                 <div className="flex items-center gap-5 p-6 bg-[#F8FAFC] rounded-2xl border border-gray-200/60 w-full max-w-sm mx-auto">
                   {/* AICTE Logo — inline SVG always renders, no hotlink dependency */}
                   <div className="h-16 w-16 flex-shrink-0 flex items-center justify-center bg-white rounded-xl border border-gray-200/60 p-1.5 select-none">
+                    {/* AICTE — gold gear, yellow circle, red AICTE text, Sanskrit motto, diya */}
                     <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="50" cy="50" r="48" fill="#1a3a6b" stroke="#f0a500" strokeWidth="3"/>
-                      <text x="50" y="38" textAnchor="middle" fill="#f0a500" fontSize="18" fontWeight="bold" fontFamily="Arial">AICTE</text>
-                      <text x="50" y="56" textAnchor="middle" fill="white" fontSize="6.5" fontFamily="Arial">ALL INDIA COUNCIL FOR</text>
-                      <text x="50" y="66" textAnchor="middle" fill="white" fontSize="6.5" fontFamily="Arial">TECHNICAL EDUCATION</text>
-                      <circle cx="50" cy="78" r="6" fill="#f0a500"/>
-                      <text x="50" y="81" textAnchor="middle" fill="#1a3a6b" fontSize="7" fontWeight="bold" fontFamily="Arial">✓</text>
+                      {/* Gear teeth — 15 teeth */}
+                      {[0,24,48,72,96,120,144,168,192,216,240,264,288,312,336].map((deg, i) => {
+                        const rad = (deg * Math.PI) / 180;
+                        const w = 8 * Math.PI / 180;
+                        const cx = 50, cy = 50, r1 = 48, r2 = 42;
+                        const x1 = cx + r2 * Math.cos(rad - w), y1 = cy + r2 * Math.sin(rad - w);
+                        const x2 = cx + r1 * Math.cos(rad - w), y2 = cy + r1 * Math.sin(rad - w);
+                        const x3 = cx + r1 * Math.cos(rad + w), y3 = cy + r1 * Math.sin(rad + w);
+                        const x4 = cx + r2 * Math.cos(rad + w), y4 = cy + r2 * Math.sin(rad + w);
+                        return <polygon key={i} points={`${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`} fill="#F59E0B" stroke="#D97706" strokeWidth="0.5" />;
+                      })}
+                      {/* Gear body */}
+                      <circle cx="50" cy="50" r="42" fill="#FBBF24" stroke="#D97706" strokeWidth="0.8"/>
+                      {/* Inner lighter yellow circle */}
+                      <circle cx="50" cy="50" r="36" fill="#FEF08A"/>
+                      {/* Circular text path */}
+                      <defs>
+                        <path id="aicteArc" d="M 50,50 m -30,0 a 30,30 0 1,1 60,0 a 30,30 0 1,1 -60,0" />
+                      </defs>
+                      <text fontSize="5.2" fontWeight="700" fontFamily="Arial" fill="#1A1A1A">
+                        <textPath href="#aicteArc" startOffset="5%">All India Council for Technical Education</textPath>
+                      </text>
+                      {/* AICTE bold red */}
+                      <text x="50" y="46" textAnchor="middle" fill="#DC2626" fontSize="13" fontWeight="900" fontFamily="Arial">AICTE</text>
+                      {/* Sanskrit motto */}
+                      <text x="50" y="56" textAnchor="middle" fill="#374151" fontSize="5" fontFamily="Arial" fontWeight="600">योगः कर्मेंषु कौशलम्</text>
+                      {/* Diya/flame emblem */}
+                      <circle cx="50" cy="72" r="9" fill="#1D4ED8"/>
+                      <ellipse cx="50" cy="69" rx="3.5" ry="5" fill="#DC2626"/>
+                      <ellipse cx="46" cy="72" rx="2.5" ry="3.5" fill="#FCD34D"/>
+                      <ellipse cx="54" cy="72" rx="2.5" ry="3.5" fill="#10B981"/>
                     </svg>
                   </div>
                   <div className="text-left">
@@ -306,13 +332,68 @@ const Partners = () => {
                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
                   className="text-center"
                 >
-                  <svg viewBox="0 0 200 50" className="h-16 w-auto mx-auto" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="8" width="34" height="34" rx="7" fill="#2563EB"/>
-                    <text x="17" y="32" textAnchor="middle" fill="white" fontSize="20" fontWeight="900" fontFamily="Arial,sans-serif">S</text>
-                    <text x="44" y="34" fill="#0F172A" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Skill</text>
-                    <text x="94" y="34" fill="#2563EB" fontSize="18" fontWeight="700" fontFamily="Arial,sans-serif">Station</text>
+                  {/* SkillStation branded logo — open book + rocket + graduation cap */}
+                  <svg viewBox="0 0 260 130" className="h-28 w-auto mx-auto drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                    {/* Open book — left page (navy) */}
+                    <path d="M30 82 Q70 68 130 76 L128 98 Q88 86 32 100 Z" fill="#1B3A6B" />
+                    {/* Open book — right page (orange) */}
+                    <path d="M230 82 Q190 68 130 76 L132 98 Q172 86 228 100 Z" fill="#F97316" />
+                    {/* Book spine shadow */}
+                    <line x1="130" y1="76" x2="130" y2="100" stroke="#0F172A" strokeWidth="2" strokeLinecap="round" />
+                    {/* Book bottom curve */}
+                    <path d="M32 100 Q130 110 228 100" fill="none" stroke="#1B3A6B" strokeWidth="2.5" strokeLinecap="round" />
+
+                    {/* Station building (left) */}
+                    <rect x="45" y="54" width="40" height="30" rx="2" fill="#1B3A6B" />
+                    <rect x="52" y="40" width="10" height="18" rx="1" fill="#2563EB" />
+                    <rect x="55" y="36" width="4" height="6" rx="1" fill="#1B3A6B" />
+                    <rect x="50" y="62" width="14" height="10" rx="1" fill="#3B82F6" opacity="0.6" />
+                    <rect x="67" y="60" width="8" height="8" rx="1" fill="#F59E0B" opacity="0.7" />
+                    <rect x="78" y="60" width="5" height="8" rx="1" fill="#F59E0B" opacity="0.7" />
+                    {/* Clock face */}
+                    <circle cx="57" cy="46" r="4" fill="white" opacity="0.9" />
+                    <line x1="57" y1="46" x2="57" y2="43" stroke="#1B3A6B" strokeWidth="0.8" strokeLinecap="round" />
+                    <line x1="57" y1="46" x2="59" y2="46" stroke="#1B3A6B" strokeWidth="0.8" strokeLinecap="round" />
+
+                    {/* Train / carriage (right) */}
+                    <rect x="155" y="58" width="55" height="28" rx="8" fill="#1B3A6B" />
+                    <rect x="162" y="63" width="16" height="12" rx="4" fill="#60A5FA" opacity="0.8" />
+                    <rect x="185" y="63" width="16" height="12" rx="4" fill="#60A5FA" opacity="0.8" />
+                    <circle cx="168" cy="89" r="5" fill="#374151" />
+                    <circle cx="168" cy="89" r="2.5" fill="#9CA3AF" />
+                    <circle cx="198" cy="89" r="5" fill="#374151" />
+                    <circle cx="198" cy="89" r="2.5" fill="#9CA3AF" />
+
+                    {/* Rocket body */}
+                    <path d="M124 74 Q130 30 136 74 L134 82 L126 82 Z" fill="#F97316" />
+                    <path d="M126 80 L122 90 L130 85 L138 90 L134 80 Z" fill="#1B3A6B" />
+                    {/* Rocket flame */}
+                    <ellipse cx="130" cy="92" rx="4" ry="6" fill="#FCD34D" opacity="0.9" />
+                    <ellipse cx="130" cy="94" rx="2.5" ry="4" fill="#F97316" />
+                    {/* Rocket window */}
+                    <circle cx="130" cy="62" r="4" fill="white" opacity="0.85" />
+                    <circle cx="130" cy="62" r="2" fill="#93C5FD" opacity="0.7" />
+
+                    {/* Graduation cap */}
+                    <rect x="122" y="20" width="16" height="4" rx="1.5" fill="#1B3A6B" />
+                    <polygon points="130,12 142,20 130,28 118,20" fill="#0F172A" />
+                    <line x1="142" y1="20" x2="145" y2="28" stroke="#F97316" strokeWidth="1.5" strokeLinecap="round" />
+                    <circle cx="145" cy="30" r="2.5" fill="#F97316" />
+
+                    {/* Sparkle dots */}
+                    <circle cx="100" cy="36" r="2" fill="#F97316" opacity="0.7" />
+                    <circle cx="92" cy="50" r="1.5" fill="#2563EB" opacity="0.6" />
+                    <circle cx="160" cy="38" r="2" fill="#FCD34D" opacity="0.8" />
+                    <circle cx="168" cy="52" r="1.5" fill="#2563EB" opacity="0.6" />
+
+                    {/* Brand text */}
+                    <text x="86" y="120" fontFamily="Arial,sans-serif" fontSize="16" fontWeight="900" fill="#1B3A6B">Skil</text>
+                    <text x="116" y="120" fontFamily="Arial,sans-serif" fontSize="16" fontWeight="900" fill="#F97316">Station</text>
+
+                    {/* Tagline */}
+                    <text x="130" y="130" textAnchor="middle" fontFamily="Arial,sans-serif" fontSize="6.5" fontWeight="600" fill="#6B7280" letterSpacing="1.5">LEARN. GROW. SUCCEED.</text>
                   </svg>
-                  <div className="mt-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">SkillStation Learning Unit</div>
+                  <div className="mt-3 text-[10px] font-bold text-gray-500 uppercase tracking-widest">SkillStation Learning Unit</div>
                 </motion.div>
               </div>
 

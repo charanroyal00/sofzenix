@@ -1,8 +1,33 @@
 import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaArrowRight, FaCloud, FaCode, FaDatabase, FaCogs, FaBrain, FaGraduationCap } from 'react-icons/fa';
-import { SiReact, SiNodedotjs, SiExpress, SiMongodb, SiSpringboot, SiDocker, SiPostgresql } from 'react-icons/si';
+import { FaArrowRight, FaCloud, FaBrain } from 'react-icons/fa';
+import { SiReact, SiNodedotjs, SiMongodb, SiSpringboot, SiPostgresql } from 'react-icons/si';
+
+// SkillStation inline SVG logo — based on official brand identity
+// Colors: navy #1B3A6B, orange #F97316, tagline gray #6B7280
+const SkillStationLogo = () => (
+  <svg viewBox="0 0 120 52" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    {/* Open book base */}
+    <path d="M10 34 Q30 28 60 32 Q90 28 110 34 L108 42 Q90 36 60 40 Q30 36 12 42 Z" fill="#1B3A6B" />
+    <path d="M12 42 Q30 36 60 40 L60 32 Q30 28 12 34 Z" fill="#2563EB" />
+    <path d="M108 42 Q90 36 60 40 L60 32 Q90 28 108 34 Z" fill="#F97316" />
+    {/* Spine crease */}
+    <line x1="60" y1="32" x2="60" y2="42" stroke="#0F172A" strokeWidth="1" />
+    {/* Rocket */}
+    <path d="M57 30 Q60 10 63 30 L62 34 L58 34 Z" fill="#F97316" />
+    <path d="M58 34 L56 38 L60 36 L64 38 L62 34 Z" fill="#1B3A6B" />
+    <path d="M59 36 Q60 40 61 36" fill="#FCD34D" opacity="0.9" />
+    {/* Graduation cap */}
+    <rect x="52" y="8" width="16" height="3" rx="1" fill="#1B3A6B" />
+    <polygon points="60,5 68,9 60,13 52,9" fill="#0F172A" />
+    <line x1="68" y1="9" x2="70" y2="14" stroke="#F97316" strokeWidth="1.2" strokeLinecap="round" />
+    <circle cx="70" cy="15" r="1.5" fill="#F97316" />
+    {/* Text: Skil (navy) + Station (orange) */}
+    <text x="10" y="50" fontFamily="Arial,sans-serif" fontSize="9.5" fontWeight="900" fill="#1B3A6B">Skil</text>
+    <text x="32" y="50" fontFamily="Arial,sans-serif" fontSize="9.5" fontWeight="900" fill="#F97316">Station</text>
+  </svg>
+);
 
 const ecosystem = [
   // Cloud
@@ -26,8 +51,7 @@ const ecosystem = [
   { name: 'Cognitive AI', category: 'AI', type: 'tech', icon: FaBrain, color: 'text-purple-500 bg-purple-50' },
 
   // Education
-  { name: 'SkillStation', category: 'Education', type: 'partner', textLogo: 'SkillStation', color: 'bg-sky-50' }
-];
+  { name: 'SkillStation', category: 'Education', type: 'partner', InlineLogo: SkillStationLogo, color: 'bg-white' }];
 
 const categories = ['All', 'Cloud', 'Development', 'Database', 'Enterprise', 'AI', 'Education'];
 
@@ -104,6 +128,8 @@ const PartnersSection = memo(() => {
                   <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${item.color}`}>
                     {IconComponent ? (
                       <IconComponent className="text-3xl" />
+                    ) : item.InlineLogo ? (
+                      <item.InlineLogo />
                     ) : item.logo ? (
                       <img src={item.logo} loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }} alt={item.name} className="max-h-8 max-w-[80%] object-contain" />
                     ) : (
